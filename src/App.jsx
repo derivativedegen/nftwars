@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { ethers } from "ethers";
-import { INFURA_ID, contracts } from "./constants/constants.js";
+import { contracts, INFURA_ID } from "./constants/constants.js";
 import { STAKE_ABI, WAR_ABI, FIGHT_ABI, LPSTAKE_ABI } from "./constants/ABIs";
 import Start from "./pages/start";
 import Web3 from "web3";

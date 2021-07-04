@@ -1,6 +1,6 @@
 export const INFURA_ID = process.env.REACT_APP_INFURA_ID;
-export const POLYGON_ID = process.env.POLYGON_ID;
-export const ETHERSCAN_KEY = process.env.ETHERSCAN_KEY;
+export const POLYGON_ID = process.env.REACT_APP_POLYGON_ID;
+export const ETHERSCAN_KEY = process.env.REACT_APP_ETHERSCAN_KEY;
 
 export const chainData = {
   mainnet: {

@@ -13,7 +13,7 @@ import {
   mumbaiData,
   ethereumData,
   ropstenData,
-} from "../constants";
+} from "../constants/constants";
 
 const Network = ({
   switchChain,

@@ -3,7 +3,7 @@ import App from "./App";
 import { Web3Provider } from "@ethersproject/providers";
 import Web3Modal from "web3modal";
 import { ethers } from "ethers";
-import { INFURA_ID, contracts } from "./constants.js";
+import { INFURA_ID, contracts } from "./constants/constants.js";
 import {
   STAKE_POLYGON_ABI,
   WAR_ABI,
@@ -16,7 +16,7 @@ const mainnetProvider = new ethers.providers.JsonRpcProvider(
   `https://mainnet.infura.io/v3/${INFURA_ID}`
 );
 
-function Provider() {
+function Network() {
   const ethereum = window.ethereum;
   const [address, setAddress] = useState();
 
@@ -162,14 +162,13 @@ function Provider() {
       ethereum
         .request({ method: "eth_requestAccounts" })
         .then((accounts) => {
-          //console.log(accounts[0]);
           if (accounts.length !== 0 && accounts[0] !== address) {
             setAddress(accounts[0]);
           }
         })
         .catch((err) => {
           if (err.code === 4001) {
-            // console.log("Please connect to MetaMask.");
+            alert("Please connect to MetaMask.");
           } else {
             console.error(err);
           }
@@ -261,4 +260,4 @@ function Provider() {
   );
 }
 
-export default Provider;
+export default Network;

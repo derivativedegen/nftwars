@@ -1,0 +1,21 @@
+.networkcard {
+  padding: 15px 50px 15px 50px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: 1%;
+}
+.networkselected {
+  padding: 15px 50px 15px 50px;
+  cursor: pointer;
+  border: 1px solid rgba(223, 82, 81, 0.7);
+  border-radius: 15%;
+}
+
+.networkpicture {
+  background-color: black;
+  padding: 15%;
+  height: 125px;
+  width: 125px;
+  border-radius: 100%;
+  border: 2px solid rgb(72, 31, 119);
+}

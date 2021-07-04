@@ -1,0 +1,112 @@
+.btn-retro {
+  color: black;
+  background-color: rgb(223, 82, 81);
+  border: 2px solid black;
+  outline: none !important;
+  border-radius: 15px;
+  font-weight: 600;
+  font-size: 1.25rem;
+  min-height: 40px;
+  min-width: 120px;
+  padding: 10px;
+}
+
+.btn-selected,
+.btn-selected:hover {
+  color: white;
+  background-color: rgb(72, 31, 119);
+  outline: none !important;
+  border: 2px solid white;
+  border-radius: 15px;
+  font-weight: 600;
+  font-size: 1.25rem;
+  min-height: 40px;
+  min-width: 120px;
+  padding: 10px;
+}
+
+.btn-connect {
+  color: black;
+  background-color: rgb(223, 82, 81);
+  border: 2px solid black;
+  outline: none !important;
+  border-radius: 15px;
+  font-weight: 600;
+  font-size: 1rem;
+  min-height: 40px;
+  min-width: 100px;
+  padding: 10px;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-disconnect {
+  color: white;
+  background-color: rgb(72, 31, 119);
+  box-shadow: 0 0px 20px rgba(255, 255, 255, 0.5) !important;
+  outline: none !important;
+  border: 2px solid white;
+  border-radius: 15px;
+  font-weight: 600;
+  font-size: 1rem;
+  min-height: 40px;
+  min-width: 100px;
+  padding: 10px;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-disconnect:hover,
+.btn-network:hover {
+  color: white;
+}
+
+.btn-network {
+  color: White;
+  background-color: black;
+  border: 2px solid rgb(223, 82, 81);
+  outline: none !important;
+  border-radius: 15px;
+  font-weight: 400;
+  font-size: 1rem;
+  min-height: 40px;
+  min-width: 100px;
+  padding: 10px;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-modal {
+  color: black;
+  background-color: rgb(223, 82, 81);
+  border: 2px solid black;
+  outline: none !important;
+  border-radius: 15px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  height: 40px;
+  min-width: 100px;
+  padding: 5px;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-modal-cancel {
+  color: white;
+  background-color: rgb(72, 31, 119);
+  border: 2px solid black;
+  outline: none !important;
+  border-radius: 15px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  height: 40px;
+  min-width: 100px;
+  padding: 5px;
+  transition: all 0.2s ease-in-out;
+}
+
+@media only screen and (min-width: 576px) {
+  .btn-connect,
+  .btn-disconnect,
+  .btn-network {
+    height: 60px !important;
+    min-width: 120px !important;
+    font-size: 1.25rem !important;
+  }
+}

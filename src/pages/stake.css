@@ -1,0 +1,43 @@
+.playbox {
+  background: rgba(0, 0, 0, 0.8);
+  background-image: radial-gradient(
+    ellipse at 50px 10px,
+    rgba(100, 100, 100, 0.1) 0%,
+    rgba(100, 100, 100, 0.1) 1%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+  border: 2px solid rgba(223, 82, 81, 0.75);
+  border-radius: 15pt;
+  padding: 20px;
+  min-height: 500px;
+  height: auto;
+}
+
+.dropdown-menu {
+  background-color: rgb(223, 82, 81);
+  width: 100%;
+}
+
+.dropdown-item,
+.dropdown-item:hover {
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.wallet {
+  overflow-wrap: break-word;
+}
+
+.stakeselect {
+  width: 50%;
+}
+
+.stakeinfo {
+  font-size: 1.1rem;
+}
+
+@media only screen and (max-width: 768px) {
+  .stakeselect {
+    width: 100%;
+  }
+}

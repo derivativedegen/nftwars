@@ -1,0 +1,12 @@
+.playername {
+  font-size: 20px;
+  padding: 0px 2px 0px 2px;
+}
+
+.notsignedin {
+  color: transparent;
+}
+
+.addresslink:hover {
+  cursor: pointer;
+}

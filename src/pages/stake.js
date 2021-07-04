@@ -1,0 +1,194 @@
+import React, { useEffect, useState } from "react";
+import Button from "../ui/button";
+import "./stake.css";
+import StakeInterface from "../components/StakeInterface";
+import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import Loader from "../components/loader";
+
+const Stake = ({
+  address,
+  userChain,
+  appChain,
+  web3Modal,
+  fightSupply,
+  fightCirculating,
+  warBalance,
+  warStakedBalance,
+  warRewardsBalance,
+  stakeWar,
+  withdrawWar,
+  redeemWarRewards,
+  lpTokenBalance,
+  lpStakedBalance,
+  lpRewardsBalance,
+  stakeLPToken,
+  withdrawLPToken,
+  redeemLPRewards,
+  approved,
+  setApproved,
+  confirmed,
+  setConfirmed,
+  chooseExplorer,
+  loading,
+}) => {
+  const [typeOfStake, setTypeOfStake] = useState("");
+  const [description, setDescription] = useState("");
+  const [balance, setBalance] = useState(0);
+  const [staked, setStaked] = useState(0);
+  const [rewards, setRewards] = useState(0);
+  const history = useHistory();
+  const ethereum = window.ethereum;
+
+  // Check if wallet is connected
+  let connected = false;
+  if (web3Modal) {
+    web3Modal.cachedProvider ? (connected = true) : (connected = false);
+  }
+
+  // Check if chains are the same and valid
+  let warning = appChain !== userChain;
+
+  // Set numbers for ERC20 token as integer
+  const setWarNumbers = () => {
+    const balanceNum = Number(warBalance);
+    setBalance(balanceNum);
+    const stakedNum = Number(warStakedBalance);
+    setStaked(stakedNum);
+    const rewardsNum = Number(warRewardsBalance);
+    setRewards(rewardsNum);
+  };
+
+  // Set numbers for LP token as integer
+  const setLpTokenNumbers = () => {
+    const balanceNum = Number(lpTokenBalance);
+    setBalance(balanceNum);
+    const stakedNum = Number(lpStakedBalance);
+    setStaked(stakedNum);
+    const rewardsNum = Number(lpRewardsBalance);
+    setRewards(rewardsNum);
+  };
+
+  // Update numbers if balances change
+  useEffect(() => {
+    if (typeOfStake === "WAR Tokens") {
+      setWarNumbers();
+    }
+    if (typeOfStake === "LP Tokens") {
+      setLpTokenNumbers();
+    }
+  }, [
+    warBalance,
+    warStakedBalance,
+    warRewardsBalance,
+    lpTokenBalance,
+    lpStakedBalance,
+    lpRewardsBalance,
+    userChain,
+  ]);
+
+  // Set Numbers and description based on type of stake
+  useEffect(() => {
+    if (typeOfStake === "LP Tokens") {
+      setLpTokenNumbers();
+      setDescription(
+        "Earn 100 FIGHT Tokens each day per ETH-WAR-LP Token staked."
+      );
+    }
+    if (typeOfStake === "WAR Tokens") {
+      setWarNumbers();
+      setDescription("Earn 1 FIGHT Token each day per WAR Token staked.");
+    }
+  }, [typeOfStake]);
+
+  return (
+    <div className="col-12">
+      <div className="d-flex justify-content-center">
+        {!ethereum ? (
+          <h1 className="textred textspaced wallet align-self-center pt-2">
+            Install MetaMask wallet to continue.
+          </h1>
+        ) : null}
+
+        {ethereum && !connected ? (
+          <h1 className="textred textspaced wallet align-self-center pt-2">
+            Connect a wallet.
+          </h1>
+        ) : null}
+
+        {ethereum && connected && warning ? (
+          <Button
+            text="Change Network"
+            clickAction={() => {
+              history.push("/network");
+            }}
+            buttonType={"btn-connect"}
+          />
+        ) : null}
+
+        {userChain && ethereum && connected && !warning ? (
+          <div className="stakeselect d-flex justify-content-around pt-2">
+            <Button
+              text="WAR Token"
+              buttonType={
+                typeOfStake !== "WAR Tokens" ? "btn-retro" : "btn-selected"
+              }
+              clickAction={() => setTypeOfStake("WAR Tokens")}
+            />
+
+            <Button
+              text="LP Token"
+              buttonType={
+                typeOfStake !== "LP Tokens" ? "btn-retro" : "btn-selected"
+              }
+              clickAction={() => setTypeOfStake("LP Tokens")}
+            />
+          </div>
+        ) : null}
+      </div>
+
+      {connected && typeOfStake ? (
+        <div className="mt-4 text-center">
+          <p className="stakeinfo textwhite m-0 p-0">{description}</p>
+          <p className="stakeinfo textwhite m-0 p-0">
+            Max: {fightSupply} FIGHT
+          </p>
+          <p className="stakeinfo textwhite m-0 p-0">
+            Circulating: {fightCirculating} FIGHT
+          </p>
+        </div>
+      ) : null}
+
+      <div className="d-flex justify-content-center mt-4 col-8 offset-2">
+        {connected && typeOfStake ? (
+          <StakeInterface
+            type={typeOfStake}
+            balance={balance}
+            staked={staked}
+            rewards={rewards}
+            stakeWar={stakeWar}
+            withdrawWar={withdrawWar}
+            redeemWarRewards={redeemWarRewards}
+            stakeLPToken={stakeLPToken}
+            withdrawLPToken={withdrawLPToken}
+            redeemLPRewards={redeemLPRewards}
+            approved={approved}
+            setApproved={setApproved}
+            confirmed={confirmed}
+            setConfirmed={setConfirmed}
+            chooseExplorer={chooseExplorer}
+            loading={loading}
+          />
+        ) : null}
+      </div>
+
+      <div class="mt-4 d-flex justify-content-center">
+        <Link to="/menu">
+          <button className="menuButton shadow-lg"> Main Menu </button>
+        </Link>
+      </div>
+    </div>
+  );
+};
+
+export default Stake;

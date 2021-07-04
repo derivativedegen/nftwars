@@ -1,0 +1,32 @@
+.modaltest {
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px;
+}
+
+.modalFull {
+  background-image: linear-gradient(
+      to bottom,
+      rgba(9, 0, 59, 0.8),
+      rgba(34, 0, 30, 0.75)
+    ),
+    url("../images/bg.png");
+  border: 2px solid rgba(223, 82, 81, 0.75);
+}
+
+.stakeclaiminput {
+  width: 90%;
+}
+
+.stakeclaim {
+  text-align: center;
+}
+
+.stakeclaiminput {
+  text-align: center;
+  color: white;
+  background-color: black;
+  font-size: 2rem;
+  border: 1px solid white;
+  border-radius: 15px;
+  justify-content: center;
+}

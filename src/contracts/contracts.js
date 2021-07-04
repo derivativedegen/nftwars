@@ -1,0 +1,1 @@
+module.exports = ["FightToken","MuseToken","StakingContract"];

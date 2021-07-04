@@ -1,0 +1,74 @@
+.header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+.headerbox {
+  background: rgba(0, 0, 0, 1);
+  background-image: radial-gradient(ellipse at 50px 10px, rgba(72, 31, 119, 0.3) 0%, rgba(0, 0, 0, 1) 100%);
+  border-bottom: 2px solid rgb(72, 31, 119);
+  margin: 0px 0px 20px 0px;
+  padding: 10px;
+}
+
+.logo {
+  height: 60px;
+  width: 60px;
+  border-radius: 100%;
+  border: 1px solid rgb(72, 31, 119);
+}
+
+.sitename {
+  margin-top: 0px;
+  margin-bottom: 8px !important;
+  font-size: 9.5vw;
+}
+.sitename:hover {
+  cursor: pointer;
+}
+
+.pagename {
+  margin-top: 0px;
+  font-size: 8vw;
+}
+
+.horizontalbreak {
+  color: white;
+  border: 1px solid rgb(72, 31, 119);
+  width: 100%;
+}
+
+@media only screen and (min-width: 576px) {
+  .sitename {
+    font-size: 10vw;
+  }
+  .pagename {
+    font-size: 6vw;
+  }
+}
+@media only screen and (min-width: 768px) {
+  .sitename {
+    font-size: 7vw;
+  }
+  .pagename {
+    font-size: 6vw;
+  }
+}
+@media only screen and (min-width: 992px) {
+  .sitename {
+    font-size: 4.5vw;
+  }
+  .pagename {
+    font-size: 5vw;
+  }
+}
+@media only screen and (min-width: 1200px) {
+  .sitename {
+    font-size: 3.5vw;
+  }
+  .pagename {
+    font-size: 4vw;
+  }
+}

@@ -6,6 +6,8 @@ import Button from "../ui/button";
 import { useHistory } from "react-router-dom";
 import Warning from "./Warning";
 import Loader from "./loader";
+import { useSelector } from "react-redux";
+import { selectLoading } from "../redux/transactionSlice";
 
 const Header = ({
   appChain,
@@ -20,9 +22,9 @@ const Header = ({
   connected,
   warning,
   chooseExplorer,
-  loading,
 }) => {
   const history = useHistory();
+  const loadingState = useSelector(selectLoading);
 
   const selectedNetwork = () => {
     if (appChain == "0x1") {
@@ -59,12 +61,6 @@ const Header = ({
     }
   }
 
-  /*useEffect(() => {
-    console.log("connected: " + connected);
-    console.log("user chain: " + userChain);
-    console.log("warning: " + warning);
-  }, [connected]);*/
-
   return (
     <div className="mb-5">
       <div className="header headerbox shadow-lg mb-0">
@@ -76,7 +72,7 @@ const Header = ({
             NFT WARS
           </h2>
 
-          <div className="pl-2 pr-4">{loading ? <Loader /> : null}</div>
+          <div className="pl-2 pr-4">{loadingState ? <Loader /> : null}</div>
 
           <div className="ml-auto">
             <Button

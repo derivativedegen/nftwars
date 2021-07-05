@@ -3,6 +3,12 @@ import Modal from "react-bootstrap/Modal";
 import Button from "../ui/button";
 import Loader from "./loader";
 import "./StakeModal.css";
+import {
+  selectLoading,
+  selectApproved,
+  selectConfirmed,
+} from "../redux/transactionSlice";
+import { useSelector } from "react-redux";
 
 function StakeModal({
   type,
@@ -10,12 +16,13 @@ function StakeModal({
   hideModal,
   stakeCheck,
   balanceNum,
-  approved,
-  confirmed,
   chooseExplorer,
-  loading
 }) {
   const [amount, setAmount] = useState(0);
+  const approved = useSelector(selectApproved);
+  const confirmed = useSelector(selectConfirmed);
+  const loading = useSelector(selectLoading);
+
   let approvedLink = null;
   if (approved) {
     approvedLink = chooseExplorer("tx") + approved.transactionHash;

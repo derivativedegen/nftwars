@@ -25,12 +25,9 @@ const Stake = ({
   stakeLPToken,
   withdrawLPToken,
   redeemLPRewards,
-  approved,
-  setApproved,
   confirmed,
   setConfirmed,
   chooseExplorer,
-  loading,
 }) => {
   const [typeOfStake, setTypeOfStake] = useState("");
   const [description, setDescription] = useState("");
@@ -172,12 +169,9 @@ const Stake = ({
             stakeLPToken={stakeLPToken}
             withdrawLPToken={withdrawLPToken}
             redeemLPRewards={redeemLPRewards}
-            approved={approved}
-            setApproved={setApproved}
             confirmed={confirmed}
             setConfirmed={setConfirmed}
             chooseExplorer={chooseExplorer}
-            loading={loading}
           />
         ) : null}
       </div>

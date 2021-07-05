@@ -17,7 +17,8 @@ import Stats from "./pages/stats";
 import Network from "./pages/network";
 import numberWithCommas from "./helpers/numberWithCommas";
 import { getTokenBalance } from "./helpers/getTokenBalance";
-import usePoller from "./hooks/Poller";
+import { useSelector, useDispatch } from "react-redux";
+import { toggleLoading, approved, confirmed } from "./redux/transactionSlice";
 // import Footer from "./components/footer";
 
 function App({
@@ -41,6 +42,7 @@ function App({
   fightContract,
 }) {
   let web3 = new Web3(`https://mainnet.infura.io/v3/${INFURA_ID}`);
+  const dispatch = useDispatch();
 
   // Get All Balances Init and If Address Changes
   useEffect(() => {
@@ -48,11 +50,6 @@ function App({
       getAllBalances(address);
     }
   }, [address]);
-
-  // State for Transactions
-  const [loading, setLoading] = useState(false);
-  const [approved, setApproved] = useState();
-  const [confirmed, setConfirmed] = useState();
 
   // State for Token Balances
   const [warBalance, setWarBalance] = useState(0);
@@ -62,7 +59,6 @@ function App({
   const [lpStakedBalance, setLpStakedBalance] = useState(0);
   const [lpRewardsBalance, setLpRewardsBalance] = useState(0);
   const [fightBalance, setFightTokenBalance] = useState(0);
-
   // State for Statistics
   const [fightSupply, setFightSupply] = useState(0);
   const [fightCirculating, setFightCirculating] = useState(0);
@@ -72,11 +68,11 @@ function App({
   // Get Balances
   const getAllBalances = (address) => {
     if (address) {
-      setLoading(true);
+      dispatch(toggleLoading());
       getTokenBalances(address);
       getStakedBalances(address);
       getRewardBalances(address);
-      setLoading(false);
+      dispatch(toggleLoading());
     }
   };
   const getTokenBalances = (address) => {
@@ -155,7 +151,7 @@ function App({
 
   // Staking & Redeeming
   const contractAction = async (contract, action) => {
-    setLoading(true);
+    dispatch(toggleLoading());
     let tx;
     switch (action) {
       case "withdraw":
@@ -169,57 +165,45 @@ function App({
     if (receipt) {
       getAllBalances(address);
     }
-    setLoading(false);
+    dispatch(toggleLoading());
   };
-  const stakeWar = async (amount) => {
-    setLoading(true);
+  const stake = async (tokenContract, stakeContract, amount) => {
+    dispatch(toggleLoading());
     const convertedAmount = web3.utils.toWei(`${amount}`);
-    const tx = await contractWar.approve(
-      contractAddresses.stake,
+    const tx = await tokenContract.approve(
+      stakeContract.address,
       convertedAmount
     );
     const approveReceipt = await tx.wait();
-    setApproved(approveReceipt);
 
-    const tx2 = await contractStake.stake(convertedAmount);
+    dispatch(approved(approveReceipt));
+
+    const tx2 = await stakeContract.stake(convertedAmount);
     const stakeReceipt = await tx2.wait();
-    setConfirmed(stakeReceipt);
+    dispatch(confirmed(stakeReceipt));
 
     if (approveReceipt && stakeReceipt) {
       getAllBalances(address);
     }
-    setLoading(false);
+    dispatch(toggleLoading());
+  };
+
+  const stakeWar = (amount) => {
+    stake(contractWar, contractStake, amount);
   };
   const withdrawWar = () => {
     contractAction(contractStake, "withdraw");
   };
-  const redeemWarRewards = async () => {
+  const redeemWarRewards = () => {
     contractAction(contractStake, "redeem");
   };
-
-  const stakeLPToken = async (amount) => {
-    setLoading(true);
-    const convertedAmount = web3.utils.toWei(`${amount}`);
-    const tx = await contractLPToken.approve(
-      contractAddresses.lpstake,
-      convertedAmount
-    );
-    const approveReceipt = await tx.wait();
-    setApproved(approveReceipt);
-
-    const tx2 = await contractLPStake.stake(convertedAmount);
-    const stakeReceipt = await tx2.wait();
-    setConfirmed(stakeReceipt);
-
-    if (approveReceipt && stakeReceipt) {
-      getAllBalances(address);
-    }
-    setLoading(false);
+  const stakeLPToken = (amount) => {
+    stake(contractLPToken, contractLPStake, amount);
   };
-  const withdrawLPToken = async () => {
+  const withdrawLPToken = () => {
     contractAction(contractLPStake, "withdraw");
   };
-  const redeemLpRewards = async () => {
+  const redeemLpRewards = () => {
     contractAction(contractLPStake, "redeem");
   };
 
@@ -278,7 +262,6 @@ function App({
           connected={connected}
           warning={warning}
           chooseExplorer={chooseExplorer}
-          loading={loading}
         />
 
         <Switch>
@@ -323,12 +306,8 @@ function App({
               stakeLPToken={stakeLPToken}
               withdrawLPToken={withdrawLPToken}
               redeemLPRewards={redeemLpRewards}
-              approved={approved}
-              setApproved={setApproved}
               confirmed={confirmed}
-              setConfirmed={setConfirmed}
               chooseExplorer={chooseExplorer}
-              loading={loading}
             />
           </Route>
           <Route path="/stats">

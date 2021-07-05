@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import "./StakeInterface.css";
 import Button from "../ui/button";
 import StakeModal from "./StakeModal";
+import { useDispatch } from "react-redux";
+import { approved, confirmed } from "../redux/transactionSlice";
 
 const StakeInterface = ({
   type,
@@ -14,26 +16,22 @@ const StakeInterface = ({
   stakeLPToken,
   withdrawLPToken,
   redeemLPRewards,
-  approved,
-  setApproved,
-  confirmed,
-  setConfirmed,
   chooseExplorer,
-  loading,
 }) => {
   const rewardsNum = Number(rewards);
   const balanceNum = Number(balance);
   const stakedNum = Number(staked);
   const [isOpen, setIsOpen] = useState(false);
+  const dispatch = useDispatch();
 
   const showModal = () => {
-    setApproved("");
-    setConfirmed("");
+    dispatch(approved(""));
+    dispatch(confirmed(""));
     setIsOpen(true);
   };
   const hideModal = () => {
-    setApproved("");
-    setConfirmed("");
+    dispatch(approved(""));
+    dispatch(confirmed(""));
     setIsOpen(false);
   };
 
@@ -107,10 +105,7 @@ const StakeInterface = ({
             hideModal={hideModal}
             balanceNum={balanceNum}
             stakeCheck={stakeCheck}
-            approved={approved}
-            confirmed={confirmed}
             chooseExplorer={chooseExplorer}
-            loading={loading}
           />
         </div>
       </div>

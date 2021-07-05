@@ -14,19 +14,20 @@ import {
   ethereumData,
   ropstenData,
 } from "../constants/constants";
+import { useSelector } from "react-redux";
+import {
+  selectWarning,
+  selectUserChain,
+  selectAppChain,
+} from "../redux/networkSlice";
 
-const Network = ({
-  switchChain,
-  appChain,
-  userChain,
-  web3Modal,
-  logoutOfWeb3Modal,
-  connected,
-  warning,
-}) => {
+const Network = ({ switchChain }) => {
   const history = useHistory();
   const ethereum = window.ethereum;
   const testing = true;
+  const warning = useSelector(selectWarning);
+  const userChain = useSelector(selectUserChain);
+  const appChain = useSelector(selectAppChain);
 
   const connectPolygon = async () => {
     if (ethereum) {

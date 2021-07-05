@@ -19,37 +19,35 @@ import numberWithCommas from "./helpers/numberWithCommas";
 import { getTokenBalance } from "./helpers/getTokenBalance";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleLoading, approved, confirmed } from "./redux/transactionSlice";
+import {
+  selectSigner,
+  selectConnected,
+  selectUserChain,
+  selectAppChain,
+  selectAddress,
+} from "./redux/networkSlice";
 // import Footer from "./components/footer";
 
 function App({
-  signer,
-  network,
-  userChain,
-  appChain,
   contractAddresses,
   switchChain,
   web3Modal,
   loadWeb3Modal,
   logoutOfWeb3Modal,
-  connected,
-  address,
-  warning,
   chooseExplorer,
   contractWar,
   contractLPToken,
   contractStake,
   contractLPStake,
-  fightContract,
+  contractFight,
 }) {
   let web3 = new Web3(`https://mainnet.infura.io/v3/${INFURA_ID}`);
   const dispatch = useDispatch();
-
-  // Get All Balances Init and If Address Changes
-  useEffect(() => {
-    if (connected && address && userChain === appChain) {
-      getAllBalances(address);
-    }
-  }, [address]);
+  const signer = useSelector(selectSigner);
+  const connected = useSelector(selectConnected);
+  const userChain = useSelector(selectUserChain);
+  const appChain = useSelector(selectAppChain);
+  const address = useSelector(selectAddress);
 
   // State for Token Balances
   const [warBalance, setWarBalance] = useState(0);
@@ -59,6 +57,7 @@ function App({
   const [lpStakedBalance, setLpStakedBalance] = useState(0);
   const [lpRewardsBalance, setLpRewardsBalance] = useState(0);
   const [fightBalance, setFightTokenBalance] = useState(0);
+
   // State for Statistics
   const [fightSupply, setFightSupply] = useState(0);
   const [fightCirculating, setFightCirculating] = useState(0);
@@ -82,7 +81,7 @@ function App({
     getTokenBalance(contractLPToken, address, "balance").then((result) => {
       setLpTokenBalance(result);
     });
-    getTokenBalance(fightContract, address, "balance").then((result) => {
+    getTokenBalance(contractFight, address, "balance").then((result) => {
       setFightTokenBalance(result);
     });
   };
@@ -148,6 +147,13 @@ function App({
   setTimeout(() => {
     clearInterval(refreshRewards);
   }, 1000 * 60 * 10);
+
+  // Get All Balances Init and If Address Changes
+  useEffect(() => {
+    if (connected && address && userChain === appChain) {
+      getAllBalances(address);
+    }
+  }, [address]);
 
   // Staking & Redeeming
   const contractAction = async (contract, action) => {
@@ -252,30 +258,19 @@ function App({
         <Header
           appChain={appChain}
           userChain={userChain}
-          address={address}
           web3Modal={web3Modal}
           loadWeb3Modal={loadWeb3Modal}
           logoutOfWeb3Modal={logoutOfWeb3Modal}
           warBalance={warBalance}
           fightBalance={fightBalance}
           lpTokenBalance={lpTokenBalance}
-          connected={connected}
-          warning={warning}
           chooseExplorer={chooseExplorer}
         />
 
         <Switch>
           <Route exact path="/" component={Start} />
           <Route path="/network">
-            <Network
-              switchChain={switchChain}
-              appChain={appChain}
-              userChain={userChain}
-              web3Modal={web3Modal}
-              logoutOfWeb3Modal={logoutOfWeb3Modal}
-              connected={connected}
-              warning={warning}
-            />
+            <Network switchChain={switchChain} />
           </Route>
           <Route path="/menu">
             <Menu web3Modal={web3Modal} logoutOfWeb3Modal={logoutOfWeb3Modal} />
@@ -286,9 +281,6 @@ function App({
           </Route>
           <Route path="/stake">
             <Stake
-              address={address}
-              userChain={userChain}
-              appChain={appChain}
               web3Modal={web3Modal}
               warBalance={warBalance}
               warStakedBalance={warStakedBalance}
@@ -306,13 +298,11 @@ function App({
               stakeLPToken={stakeLPToken}
               withdrawLPToken={withdrawLPToken}
               redeemLPRewards={redeemLpRewards}
-              confirmed={confirmed}
               chooseExplorer={chooseExplorer}
             />
           </Route>
           <Route path="/stats">
             <Stats
-              network={network}
               warAddress={contractAddresses.war}
               warSupply={warSupply}
               warCirculating={warCirculating}

@@ -11,6 +11,25 @@ import {
   LP_ABI,
   LPSTAKE_POLYGON_ABI,
 } from "./constants/ABIs";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setAddress,
+  selectAddress,
+  setProvider,
+  selectProvider,
+  setSigner,
+  selectSigner,
+  setConnected,
+  selectConnected,
+  setWarning,
+  setNetwork,
+  selectNetworkName,
+  setUserChain,
+  selectUserChain,
+  setAppChain,
+  selectAppChain,
+} from "./redux/networkSlice";
+import { chainCheck } from "./helpers/chainCheck";
 
 const mainnetProvider = new ethers.providers.JsonRpcProvider(
   `https://mainnet.infura.io/v3/${INFURA_ID}`
@@ -18,38 +37,35 @@ const mainnetProvider = new ethers.providers.JsonRpcProvider(
 
 function Network() {
   const ethereum = window.ethereum;
-  const [address, setAddress] = useState();
+  const dispatch = useDispatch();
+  const address = useSelector(selectAddress);
+  const provider = useSelector(selectProvider);
+  const signer = useSelector(selectSigner);
+  const connected = useSelector(selectConnected);
+  const network = useSelector(selectNetworkName);
+  const userChain = useSelector(selectUserChain);
+  const appChain = useSelector(selectAppChain);
 
-  // Set provider details state
-  const [provider, setProvider] = useState();
-  const [signer, setSigner] = useState();
-
-  // Set chain details state
-  const [userChain, setUserChain] = useState();
-  const [appChain, setAppChain] = useState();
-
-  // Autoselect the network name, web3 instance, and contracts based on provider & chain
-  const [network, setNetwork] = useState("mainnet");
-  const [connected, setConnected] = useState();
+  // Set contract addresses based on network
   const [contractAddresses, setContractAddresses] = useState(
-    contracts["mainnet"]
+    contracts[network]
   );
 
-  // Initialize Provider
+  // Initialize Provider && get browser chain
   const initializeProvider = () => {
     if (ethereum) {
       // Create web3 provider and signer for app data and transactions
       const userProvider = new ethers.providers.Web3Provider(ethereum);
-      setProvider(userProvider);
+      dispatch(setProvider(userProvider));
       const userSigner = userProvider.getSigner();
-      setSigner(userSigner);
+      dispatch(setSigner(userSigner));
 
       getBrowserChain();
     } else {
-      setProvider(mainnetProvider);
-      setAppChain("0x1");
-      setNetwork("mainnet");
-      setContractAddresses(contracts["mainnet"]);
+      dispatch(setProvider(mainnetProvider));
+      dispatch(setAppChain("0x1"));
+      dispatch(setNetwork("mainnet"));
+      setContractAddresses(contracts[network]);
     }
   };
   useEffect(() => {
@@ -58,19 +74,19 @@ function Network() {
 
   const getBrowserChain = () => {
     ethereum.request({ method: "eth_chainId" }).then((chainId) => {
-      setUserChain(chainId);
+      dispatch(setUserChain(chainId));
     });
   };
 
   // Check if chain is valid and supported, set appChain, and update when user chain updates
   const switchChain = (chainId) => {
     if (connected) {
-      setConnected(false);
+      dispatch(setConnected(false));
     }
     if (chainCheck(chainId)) {
-      setAppChain(chainId);
+      dispatch(setAppChain(chainId));
     } else {
-      setAppChain("0x1");
+      dispatch(setAppChain("0x1"));
     }
   };
   useEffect(() => {
@@ -80,32 +96,18 @@ function Network() {
   // Update network when app chain change is requested
   const selectNetwork = (chainId) => {
     if (chainId === "0x13881") {
-      setNetwork("mumbai");
+      dispatch(setNetwork("mumbai"));
     } else if (chainId === "0x89") {
-      setNetwork("polygon");
+      dispatch(setNetwork("polygon"));
     } else if (chainId === "0x3") {
-      setNetwork("ropsten");
+      dispatch(setNetwork("ropsten"));
     } else {
-      setNetwork("mainnet");
+      dispatch(setNetwork("mainnet"));
     }
   };
   useEffect(() => {
     selectNetwork(appChain);
   }, [appChain]);
-
-  // Validate Supported Chain
-  const chainCheck = (chain) => {
-    if (
-      chain === "0x1" ||
-      chain === "0x3" ||
-      chain === "0x89" ||
-      chain === "0x13881"
-    ) {
-      return true;
-    } else {
-      return false;
-    }
-  };
 
   // Pull in the correct contract addresses when the network updates
   useEffect(() => {
@@ -127,7 +129,7 @@ function Network() {
       checkConnected();
       const provider = await web3Modal.connect();
       const web3Provider = new Web3Provider(provider);
-      setProvider(web3Provider);
+      dispatch(setProvider(web3Provider));
       requestAccounts();
     } else {
       alert("Please install MetaMask Wallet to connect.");
@@ -138,7 +140,7 @@ function Network() {
   const logoutOfWeb3Modal = async () => {
     await web3Modal.clearCachedProvider();
     if (connected) {
-      setConnected(false);
+      dispatch(setConnected(false));
     }
     //window.location.reload();
   };
@@ -146,7 +148,9 @@ function Network() {
   // Check if user is connected or cached
   const checkConnected = () => {
     if (web3Modal) {
-      web3Modal.cachedProvider ? setConnected(true) : setConnected(false);
+      web3Modal.cachedProvider
+        ? dispatch(setConnected(true))
+        : dispatch(setConnected(false));
     }
   };
   useEffect(() => {
@@ -163,7 +167,7 @@ function Network() {
         .request({ method: "eth_requestAccounts" })
         .then((accounts) => {
           if (accounts.length !== 0 && accounts[0] !== address) {
-            setAddress(accounts[0]);
+            dispatch(setAddress(accounts[0]));
           }
         })
         .catch((err) => {
@@ -196,7 +200,7 @@ function Network() {
   // Event listeners for user chain change
   ethereum &&
     ethereum.on("chainChanged", async (chainId) => {
-      await setUserChain(chainId);
+      await dispatch(setUserChain(chainId));
       await switchChain(chainId);
       window.location.reload();
     });
@@ -204,57 +208,52 @@ function Network() {
   // Event listener for wallet address change
   ethereum && ethereum.on("accountsChanged", () => requestAccounts());
 
-  // Warning if app and wallet network aren't matching
-  const warning = appChain !== userChain;
-
   // Instansiate Contract Instances
-  const contractWar = new ethers.Contract(
-    contractAddresses.war,
-    WAR_ABI,
-    signer
-  );
-  const contractLPToken = new ethers.Contract(
-    contractAddresses.lp,
-    LP_ABI,
-    signer
-  );
-  const contractStake = new ethers.Contract(
-    contractAddresses.stake,
-    STAKE_POLYGON_ABI,
-    signer
-  );
-  const contractLPStake = new ethers.Contract(
-    contractAddresses.lpstake,
-    LPSTAKE_POLYGON_ABI,
-    signer
-  );
-  const fightContract = new ethers.Contract(
-    contractAddresses.fight,
-    FIGHT_ABI,
-    signer
-  );
+  let contractWar = {};
+  let contractLPToken = {};
+  let contractStake = {};
+  let contractLPStake = {};
+  let contractFight = {};
+  if (Object.keys(signer).length > 0) {
+    contractWar = new ethers.Contract(contractAddresses.war, WAR_ABI, signer);
+    contractLPToken = new ethers.Contract(contractAddresses.lp, LP_ABI, signer);
+    contractStake = new ethers.Contract(
+      contractAddresses.stake,
+      STAKE_POLYGON_ABI,
+      signer
+    );
+    contractLPStake = new ethers.Contract(
+      contractAddresses.lpstake,
+      LPSTAKE_POLYGON_ABI,
+      signer
+    );
+    contractFight = new ethers.Contract(
+      contractAddresses.fight,
+      FIGHT_ABI,
+      signer
+    );
+  }
+
+  if (appChain !== userChain) {
+    dispatch(setWarning(true));
+  } else {
+    dispatch(setWarning(false));
+  }
 
   return (
     <div>
       <App
-        signer={signer}
-        network={network}
-        userChain={userChain}
-        appChain={appChain}
         switchChain={switchChain}
         contractAddresses={contractAddresses}
         web3Modal={web3Modal}
         loadWeb3Modal={loadWeb3Modal}
         logoutOfWeb3Modal={logoutOfWeb3Modal}
-        connected={connected}
-        address={address}
-        warning={warning}
         chooseExplorer={chooseExplorer}
         contractWar={contractWar}
         contractLPToken={contractLPToken}
         contractStake={contractStake}
         contractLPStake={contractLPStake}
-        fightContract={fightContract}
+        contractFight={contractFight}
       />
     </div>
   );

@@ -4,12 +4,10 @@ import "./stake.css";
 import StakeInterface from "../components/StakeInterface";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import Loader from "../components/loader";
+import { useSelector } from "react-redux";
+import { selectUserChain, selectWarning } from "../redux/networkSlice";
 
 const Stake = ({
-  address,
-  userChain,
-  appChain,
   web3Modal,
   fightSupply,
   fightCirculating,
@@ -25,8 +23,6 @@ const Stake = ({
   stakeLPToken,
   withdrawLPToken,
   redeemLPRewards,
-  confirmed,
-  setConfirmed,
   chooseExplorer,
 }) => {
   const [typeOfStake, setTypeOfStake] = useState("");
@@ -36,15 +32,14 @@ const Stake = ({
   const [rewards, setRewards] = useState(0);
   const history = useHistory();
   const ethereum = window.ethereum;
+  const userChain = useSelector(selectUserChain);
+  const warning = useSelector(selectWarning);
 
   // Check if wallet is connected
   let connected = false;
   if (web3Modal) {
     web3Modal.cachedProvider ? (connected = true) : (connected = false);
   }
-
-  // Check if chains are the same and valid
-  let warning = appChain !== userChain;
 
   // Set numbers for ERC20 token as integer
   const setWarNumbers = () => {
@@ -169,8 +164,6 @@ const Stake = ({
             stakeLPToken={stakeLPToken}
             withdrawLPToken={withdrawLPToken}
             redeemLPRewards={redeemLPRewards}
-            confirmed={confirmed}
-            setConfirmed={setConfirmed}
             chooseExplorer={chooseExplorer}
           />
         ) : null}

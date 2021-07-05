@@ -8,23 +8,30 @@ import Warning from "./Warning";
 import Loader from "./loader";
 import { useSelector } from "react-redux";
 import { selectLoading } from "../redux/transactionSlice";
+import {
+  selectConnected,
+  selectWarning,
+  selectUserChain,
+  selectAppChain,
+  selectAddress,
+} from "../redux/networkSlice";
 
 const Header = ({
-  appChain,
-  userChain,
-  address,
   web3Modal,
   loadWeb3Modal,
   logoutOfWeb3Modal,
   warBalance,
   fightBalance,
   lpTokenBalance,
-  connected,
-  warning,
   chooseExplorer,
 }) => {
   const history = useHistory();
   const loadingState = useSelector(selectLoading);
+  const connected = useSelector(selectConnected);
+  const warning = useSelector(selectWarning);
+  const userChain = useSelector(selectUserChain);
+  const appChain = useSelector(selectAppChain);
+  const address = useSelector(selectAddress);
 
   const selectedNetwork = () => {
     if (appChain == "0x1") {

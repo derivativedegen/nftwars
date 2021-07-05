@@ -18,14 +18,21 @@ import Network from "./pages/network";
 import numberWithCommas from "./helpers/numberWithCommas";
 import { getTokenBalance } from "./helpers/getTokenBalance";
 import { useSelector, useDispatch } from "react-redux";
-import { toggleLoading, approved, confirmed } from "./redux/transactionSlice";
+import { toggleLoading, approved, confirmed } from "./redux/transaction";
 import {
   selectSigner,
   selectConnected,
   selectUserChain,
   selectAppChain,
   selectAddress,
-} from "./redux/networkSlice";
+} from "./redux/network";
+import {
+  setWarBalance,
+  setFightSupply,
+  setFightCirculating,
+  setWarSupply,
+  setWarCirculating,
+} from "./redux/data";
 // import Footer from "./components/footer";
 
 function App({
@@ -50,19 +57,12 @@ function App({
   const address = useSelector(selectAddress);
 
   // State for Token Balances
-  const [warBalance, setWarBalance] = useState(0);
   const [warStakedBalance, setWarStakedBalance] = useState(0);
   const [warRewardsBalance, setWarRewardsBalance] = useState(0);
   const [lpTokenBalance, setLpTokenBalance] = useState(0);
   const [lpStakedBalance, setLpStakedBalance] = useState(0);
   const [lpRewardsBalance, setLpRewardsBalance] = useState(0);
   const [fightBalance, setFightTokenBalance] = useState(0);
-
-  // State for Statistics
-  const [fightSupply, setFightSupply] = useState(0);
-  const [fightCirculating, setFightCirculating] = useState(0);
-  const [warSupply, setWarSupply] = useState(0);
-  const [warCirculating, setWarCirculating] = useState(0);
 
   // Get Balances
   const getAllBalances = (address) => {
@@ -76,7 +76,7 @@ function App({
   };
   const getTokenBalances = (address) => {
     getTokenBalance(contractWar, address, "balance").then((result) => {
-      setWarBalance(result);
+      dispatch(setWarBalance(result));
     });
     getTokenBalance(contractLPToken, address, "balance").then((result) => {
       setLpTokenBalance(result);
@@ -231,11 +231,11 @@ function App({
     };
 
     const supplyFight = await fightMainnetContract.methods.cap().call();
-    setFightSupply(convert(supplyFight));
+    dispatch(setFightSupply(convert(supplyFight)));
     const circulating = await fightMainnetContract.methods.totalSupply().call();
-    setFightCirculating(convert(circulating));
+    dispatch(setFightCirculating(convert(circulating)));
     const supplyWar = await warMainnetContract.methods.cap().call();
-    setWarSupply(convert(supplyWar));
+    dispatch(setWarSupply(convert(supplyWar)));
 
     const circulatingWar = async () => {
       const marketingBalance = await warMainnetContract.methods
@@ -244,7 +244,7 @@ function App({
       const marketingSupply = Number(web3.utils.fromWei(marketingBalance));
       const adjustedSupply = 500000 - marketingSupply - 45500; // Team Lock Supply - 0x966eD4756561C27Ada53Dd726d6629Bd366B753E
       const circulatingWar = numberWithCommas(adjustedSupply);
-      setWarCirculating(circulatingWar);
+      dispatch(setWarCirculating(circulatingWar));
     };
     circulatingWar();
   };
@@ -256,12 +256,9 @@ function App({
     <Router>
       <div className="App">
         <Header
-          appChain={appChain}
-          userChain={userChain}
           web3Modal={web3Modal}
           loadWeb3Modal={loadWeb3Modal}
           logoutOfWeb3Modal={logoutOfWeb3Modal}
-          warBalance={warBalance}
           fightBalance={fightBalance}
           lpTokenBalance={lpTokenBalance}
           chooseExplorer={chooseExplorer}
@@ -276,22 +273,15 @@ function App({
             <Menu web3Modal={web3Modal} logoutOfWeb3Modal={logoutOfWeb3Modal} />
           </Route>
           <Route path="/about" component={About} />
-          <Route path="/addliquidity">
-            <AddLiquidity appChain={appChain} />
-          </Route>
+          <Route path="/addliquidity" component={AddLiquidity} />
           <Route path="/stake">
             <Stake
               web3Modal={web3Modal}
-              warBalance={warBalance}
               warStakedBalance={warStakedBalance}
               warRewardsBalance={warRewardsBalance}
               stakeWar={stakeWar}
               withdrawWar={withdrawWar}
               redeemWarRewards={redeemWarRewards}
-              warSupply={warSupply}
-              warCirculating={warCirculating}
-              fightSupply={fightSupply}
-              fightCirculating={fightCirculating}
               lpTokenBalance={lpTokenBalance}
               lpStakedBalance={lpStakedBalance}
               lpRewardsBalance={lpRewardsBalance}
@@ -304,11 +294,7 @@ function App({
           <Route path="/stats">
             <Stats
               warAddress={contractAddresses.war}
-              warSupply={warSupply}
-              warCirculating={warCirculating}
               fightAddress={contractAddresses.fight}
-              fightSupply={fightSupply}
-              fightCirculating={fightCirculating}
               stakingAddress={contractAddresses.stake}
               lpAddress={contractAddresses.lp}
               lpStakingAddress={contractAddresses.lpstake}
@@ -316,9 +302,7 @@ function App({
             />
           </Route>
           <Route path="/social" component={Social} />
-          <Route path="/trade">
-            <Trade appChain={appChain} />
-          </Route>
+          <Route path="/trade" component={Trade} />
         </Switch>
       </div>
     </Router>

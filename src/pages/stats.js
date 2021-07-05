@@ -2,20 +2,27 @@ import React from "react";
 import "./stats.css";
 import Button from "../ui/button";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import {
+  selectFightSupply,
+  selectFightCirculating,
+  selectWarSupply,
+  selectWarCirculating,
+} from "../redux/data";
 
 const Stats = ({
   warAddress,
-  warSupply,
-  warCirculating,
   fightAddress,
-  fightSupply,
-  fightCirculating,
   stakingAddress,
   lpAddress,
   lpStakingAddress,
   chooseExplorer,
 }) => {
   const ethereum = window.ethereum;
+  const fightSupply = useSelector(selectFightSupply);
+  const fightCirculating = useSelector(selectFightCirculating);
+  const warSupply = useSelector(selectWarSupply);
+  const warCirculating = useSelector(selectWarCirculating);
 
   const addFightToken = async () => {
     if (ethereum) {

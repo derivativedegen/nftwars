@@ -2,8 +2,12 @@ import React from "react";
 import "./trade.css";
 import SiteFrame from "../components/siteFrame";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectAppChain } from "../redux/network";
 
-function Trade({ appChain }) {
+function Trade() {
+  const appChain = useSelector(selectAppChain);
+
   const determineExchange = () => {
     if (appChain === "0x13881" || appChain === "0x89") {
       return "https://quickswap.exchange/#/swap";

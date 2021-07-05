@@ -3,7 +3,7 @@ import "./StakeInterface.css";
 import Button from "../ui/button";
 import StakeModal from "./StakeModal";
 import { useDispatch } from "react-redux";
-import { approved, confirmed } from "../redux/transactionSlice";
+import { approved, confirmed } from "../redux/transaction";
 
 const StakeInterface = ({
   type,

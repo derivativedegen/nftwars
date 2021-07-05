@@ -2,8 +2,12 @@ import React from "react";
 import "./addLp.css";
 import SiteFrame from "../components/siteFrame";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectAppChain } from "../redux/network";
 
-function AddLiquidity({ appChain }) {
+function AddLiquidity() {
+  const appChain = useSelector(selectAppChain);
+
   const determineExchange = () => {
     if (appChain === "0x13881" || appChain === "0x89") {
       return "https://quickswap.exchange/#/add/0x7F2841A5C7e69e921897fBfbCE95caEa34634A35/0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619";

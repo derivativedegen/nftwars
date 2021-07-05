@@ -13,7 +13,7 @@ const initialState = {
 };
 
 // Slice
-const networkSlice = createSlice({
+const network = createSlice({
   name: "network",
   initialState: initialState,
   reducers: {
@@ -54,7 +54,7 @@ export const {
   setNetwork,
   setUserChain,
   setAppChain,
-} = networkSlice.actions;
+} = network.actions;
 
 // Selectors
 export const selectAddress = (state) => state.network.address;
@@ -67,4 +67,4 @@ export const selectUserChain = (state) => state.network.userChain;
 export const selectAppChain = (state) => state.network.appChain;
 
 // Reducer
-export default networkSlice.reducer;
+export default network.reducer;

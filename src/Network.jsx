@@ -28,7 +28,7 @@ import {
   selectUserChain,
   setAppChain,
   selectAppChain,
-} from "./redux/networkSlice";
+} from "./redux/network";
 import { chainCheck } from "./helpers/chainCheck";
 
 const mainnetProvider = new ethers.providers.JsonRpcProvider(

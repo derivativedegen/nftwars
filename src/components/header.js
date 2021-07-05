@@ -7,20 +7,20 @@ import { useHistory } from "react-router-dom";
 import Warning from "./Warning";
 import Loader from "./loader";
 import { useSelector } from "react-redux";
-import { selectLoading } from "../redux/transactionSlice";
+import { selectLoading } from "../redux/transaction";
 import {
   selectConnected,
   selectWarning,
   selectUserChain,
   selectAppChain,
   selectAddress,
-} from "../redux/networkSlice";
+} from "../redux/network";
+import { selectWarBalance } from "../redux/data";
 
 const Header = ({
   web3Modal,
   loadWeb3Modal,
   logoutOfWeb3Modal,
-  warBalance,
   fightBalance,
   lpTokenBalance,
   chooseExplorer,
@@ -32,6 +32,7 @@ const Header = ({
   const userChain = useSelector(selectUserChain);
   const appChain = useSelector(selectAppChain);
   const address = useSelector(selectAddress);
+  const warBalance = useSelector(selectWarBalance);
 
   const selectedNetwork = () => {
     if (appChain == "0x1") {

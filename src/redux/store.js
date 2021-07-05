@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
-import dataReducer from "./dataSlice";
-import transactionReducer from "./transactionSlice";
-import networkReducer from "./networkSlice";
+import dataReducer from "./data";
+import transactionReducer from "./transaction";
+import networkReducer from "./network";
 
 const store = configureStore({
   reducer: {

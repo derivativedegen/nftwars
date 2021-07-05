@@ -5,13 +5,15 @@ import StakeInterface from "../components/StakeInterface";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { selectUserChain, selectWarning } from "../redux/networkSlice";
+import { selectUserChain, selectWarning } from "../redux/network";
+import {
+  selectWarBalance,
+  selectFightSupply,
+  selectFightCirculating,
+} from "../redux/data";
 
 const Stake = ({
   web3Modal,
-  fightSupply,
-  fightCirculating,
-  warBalance,
   warStakedBalance,
   warRewardsBalance,
   stakeWar,
@@ -34,6 +36,11 @@ const Stake = ({
   const ethereum = window.ethereum;
   const userChain = useSelector(selectUserChain);
   const warning = useSelector(selectWarning);
+
+  // Data State
+  const warBalance = useSelector(selectWarBalance);
+  const fightSupply = useSelector(selectFightSupply);
+  const fightCirculating = useSelector(selectFightCirculating);
 
   // Check if wallet is connected
   let connected = false;

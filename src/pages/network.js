@@ -19,7 +19,7 @@ import {
   selectWarning,
   selectUserChain,
   selectAppChain,
-} from "../redux/networkSlice";
+} from "../redux/network";
 
 const Network = ({ switchChain }) => {
   const history = useHistory();

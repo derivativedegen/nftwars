@@ -7,7 +7,7 @@ import {
   selectLoading,
   selectApproved,
   selectConfirmed,
-} from "../redux/transactionSlice";
+} from "../redux/transaction";
 import { useSelector } from "react-redux";
 
 function StakeModal({

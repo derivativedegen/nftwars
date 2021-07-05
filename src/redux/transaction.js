@@ -10,7 +10,7 @@ const initialState = {
 };
 
 // Slice
-const transactionSlice = createSlice({
+const transaction = createSlice({
   name: "transaction",
   initialState: initialState,
   reducers: {
@@ -27,7 +27,7 @@ const transactionSlice = createSlice({
 });
 
 // Actions
-export const { toggleLoading, approved, confirmed } = transactionSlice.actions;
+export const { toggleLoading, approved, confirmed } = transaction.actions;
 
 // Selectors
 export const selectLoading = (state) => state.transaction.loading;
@@ -35,4 +35,4 @@ export const selectApproved = (state) => state.transaction.approved;
 export const selectConfirmed = (state) => state.transaction.confirmed;
 
 // Reducer
-export default transactionSlice.reducer;
+export default transaction.reducer;

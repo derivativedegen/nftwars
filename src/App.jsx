@@ -149,7 +149,6 @@ function App({ switchChain, loadWeb3Modal, logoutOfWeb3Modal }) {
     if (connected && address) {
       if (warStakedBalance > 0 || lpStakedBalance > 0) {
         getRewardBalances(address);
-        console.log("polled rewards");
       }
     }
   }, 1000 * 60);
@@ -270,15 +269,12 @@ function App({ switchChain, loadWeb3Modal, logoutOfWeb3Modal }) {
         />
 
         <Switch>
-          <Route exact path="/" component={Start} />
           <Route path="/network">
             <Network switchChain={switchChain} />
           </Route>
           <Route path="/menu">
             <Menu logoutOfWeb3Modal={logoutOfWeb3Modal} />
           </Route>
-          <Route path="/about" component={About} />
-          <Route path="/addliquidity" component={AddLiquidity} />
           <Route path="/stake">
             <Stake
               stakeWar={stakeWar}
@@ -289,6 +285,9 @@ function App({ switchChain, loadWeb3Modal, logoutOfWeb3Modal }) {
               redeemLPRewards={redeemLpRewards}
             />
           </Route>
+          <Route exact path="/" component={Start} />
+          <Route path="/about" component={About} />
+          <Route path="/addliquidity" component={AddLiquidity} />
           <Route path="/stats" component={Stats} />
           <Route path="/social" component={Social} />
           <Route path="/trade" component={Trade} />

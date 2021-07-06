@@ -250,6 +250,12 @@ function App({ switchChain, loadWeb3Modal, logoutOfWeb3Modal }) {
         />
 
         <Switch>
+          <Route exact path="/" component={Start} />
+          <Route path="/about" component={About} />
+          <Route path="/addliquidity" component={AddLiquidity} />
+          <Route path="/stats" component={Stats} />
+          <Route path="/social" component={Social} />
+          <Route path="/trade" component={Trade} />
           <Route path="/network">
             <Network switchChain={switchChain} />
           </Route>
@@ -259,12 +265,6 @@ function App({ switchChain, loadWeb3Modal, logoutOfWeb3Modal }) {
           <Route path="/stake">
             <Stake stake={stake} contractAction={contractAction} />
           </Route>
-          <Route exact path="/" component={Start} />
-          <Route path="/about" component={About} />
-          <Route path="/addliquidity" component={AddLiquidity} />
-          <Route path="/stats" component={Stats} />
-          <Route path="/social" component={Social} />
-          <Route path="/trade" component={Trade} />
         </Switch>
       </div>
     </Router>

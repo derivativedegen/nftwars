@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import Application from "./Network";
+import Application from "./Ethereum";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 

@@ -3,7 +3,7 @@ import App from "./App";
 import { Web3Provider } from "@ethersproject/providers";
 import Web3Modal from "web3modal";
 import { ethers } from "ethers";
-import { INFURA_ID, contracts } from "./constants/constants.js";
+import { INFURA_ID, contractInfo } from "./constants/constants.js";
 import {
   STAKE_POLYGON_ABI,
   WAR_ABI,
@@ -28,8 +28,18 @@ import {
   selectUserChain,
   setAppChain,
   selectAppChain,
+  setWeb3Modal,
 } from "./redux/network";
 import { chainCheck } from "./helpers/chainCheck";
+import {
+  setContractAddresses,
+  selectContractAddresses,
+  setContractWar,
+  setContractLPToken,
+  setContractStake,
+  setContractLPStake,
+  setContractFight,
+} from "./redux/contracts";
 
 const mainnetProvider = new ethers.providers.JsonRpcProvider(
   `https://mainnet.infura.io/v3/${INFURA_ID}`
@@ -45,11 +55,7 @@ function Network() {
   const network = useSelector(selectNetworkName);
   const userChain = useSelector(selectUserChain);
   const appChain = useSelector(selectAppChain);
-
-  // Set contract addresses based on network
-  const [contractAddresses, setContractAddresses] = useState(
-    contracts[network]
-  );
+  const contractAddresses = useSelector(selectContractAddresses);
 
   // Initialize Provider && get browser chain
   const initializeProvider = () => {
@@ -65,7 +71,7 @@ function Network() {
       dispatch(setProvider(mainnetProvider));
       dispatch(setAppChain("0x1"));
       dispatch(setNetwork("mainnet"));
-      setContractAddresses(contracts[network]);
+      dispatch(setContractAddresses(contractInfo[network]));
     }
   };
   useEffect(() => {
@@ -112,7 +118,7 @@ function Network() {
   // Pull in the correct contract addresses when the network updates
   useEffect(() => {
     if (network) {
-      setContractAddresses(contracts[network]);
+      dispatch(setContractAddresses(contractInfo[network]));
     }
   }, [network]);
 
@@ -122,6 +128,7 @@ function Network() {
     providerOptions: {},
     theme: "dark",
   });
+  dispatch(setWeb3Modal(web3Modal));
 
   // Get user wallet provider
   const loadWeb3Modal = async () => {
@@ -180,35 +187,18 @@ function Network() {
     }
   };
 
-  // Determine the explorer to use based on app network
-  const chooseExplorer = (type) => {
-    if (appChain == "0x13881") {
-      if (type !== "tx") {
-        return `https://explorer-mumbai.maticvigil.com/address/`;
-      } else {
-        return `https://explorer-mumbai.maticvigil.com/${type}/`;
-      }
-    } else if (appChain == "0x89") {
-      return `https://polygonscan.com/${type}/`;
-    } else if (appChain == "0x3") {
-      return `https://ropsten.etherscan.io/${type}/`;
-    } else {
-      return `https://www.etherscan.io/${type}/`;
-    }
-  };
-
   // Event listeners for user chain change
   ethereum &&
-    ethereum.on("chainChanged", async (chainId) => {
-      await dispatch(setUserChain(chainId));
-      await switchChain(chainId);
+    ethereum.on("chainChanged", (chainId) => {
+      dispatch(setUserChain(chainId));
+      switchChain(chainId);
       window.location.reload();
     });
 
   // Event listener for wallet address change
   ethereum && ethereum.on("accountsChanged", () => requestAccounts());
 
-  // Instansiate Contract Instances
+  // Instansiate Contract Instances Into State
   let contractWar = {};
   let contractLPToken = {};
   let contractStake = {};
@@ -216,24 +206,34 @@ function Network() {
   let contractFight = {};
   if (Object.keys(signer).length > 0) {
     contractWar = new ethers.Contract(contractAddresses.war, WAR_ABI, signer);
+    dispatch(setContractWar(contractWar));
+
     contractLPToken = new ethers.Contract(contractAddresses.lp, LP_ABI, signer);
+    dispatch(setContractLPToken(contractLPToken));
+
     contractStake = new ethers.Contract(
       contractAddresses.stake,
       STAKE_POLYGON_ABI,
       signer
     );
+    dispatch(setContractStake(contractStake));
+
     contractLPStake = new ethers.Contract(
       contractAddresses.lpstake,
       LPSTAKE_POLYGON_ABI,
       signer
     );
+    dispatch(setContractLPStake(contractLPStake));
+
     contractFight = new ethers.Contract(
       contractAddresses.fight,
       FIGHT_ABI,
       signer
     );
+    dispatch(setContractFight(contractFight));
   }
 
+  // Warn user if networks aren't matching
   if (appChain !== userChain) {
     dispatch(setWarning(true));
   } else {
@@ -244,16 +244,8 @@ function Network() {
     <div>
       <App
         switchChain={switchChain}
-        contractAddresses={contractAddresses}
-        web3Modal={web3Modal}
         loadWeb3Modal={loadWeb3Modal}
         logoutOfWeb3Modal={logoutOfWeb3Modal}
-        chooseExplorer={chooseExplorer}
-        contractWar={contractWar}
-        contractLPToken={contractLPToken}
-        contractStake={contractStake}
-        contractLPStake={contractLPStake}
-        contractFight={contractFight}
       />
     </div>
   );

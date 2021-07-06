@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Modal from "react-bootstrap/Modal";
+import chooseExplorer from "../helpers/chooseExplorer";
+
 import Button from "../ui/button";
 import Loader from "./loader";
 import "./StakeModal.css";
@@ -9,28 +11,23 @@ import {
   selectConfirmed,
 } from "../redux/transaction";
 import { useSelector } from "react-redux";
+import { selectAppChain } from "../redux/network";
 
-function StakeModal({
-  type,
-  show,
-  hideModal,
-  stakeCheck,
-  balanceNum,
-  chooseExplorer,
-}) {
+function StakeModal({ type, show, hideModal, stakeCheck, balance }) {
   const [amount, setAmount] = useState(0);
   const approved = useSelector(selectApproved);
   const confirmed = useSelector(selectConfirmed);
   const loading = useSelector(selectLoading);
+  const appChain = useSelector(selectAppChain);
 
   let approvedLink = null;
   if (approved) {
-    approvedLink = chooseExplorer("tx") + approved.transactionHash;
+    approvedLink = chooseExplorer(appChain, "tx") + approved.transactionHash;
   }
 
   let confirmedLink = null;
   if (confirmed) {
-    confirmedLink = chooseExplorer("tx") + confirmed.transactionHash;
+    confirmedLink = chooseExplorer(appChain, "tx") + confirmed.transactionHash;
   }
 
   return (
@@ -47,7 +44,7 @@ function StakeModal({
               <input
                 type="number"
                 min="5"
-                max={balanceNum}
+                max={balance}
                 placeholder="5"
                 value={amount ? amount : null}
                 className="stakeclaiminput shadow-lg"
@@ -59,7 +56,7 @@ function StakeModal({
             </div>
             <div className="col-12 col-lg-10 offset-lg-1 text-center">
               <p className="textlarge textbold textwhite pt-3">
-                Balance: <span className="textred">{balanceNum}</span> {type}
+                Balance: <span className="textred">{balance}</span> {type}
               </p>
               {type === "WAR Tokens" ? (
                 <p className="textbold textwhite">
@@ -76,7 +73,7 @@ function StakeModal({
             />
             <Button
               text="Max"
-              clickAction={() => setAmount(balanceNum)}
+              clickAction={() => setAmount(balance)}
               buttonType="btn-modal"
             />
             <Button

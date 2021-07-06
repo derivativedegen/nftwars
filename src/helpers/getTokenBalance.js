@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 
-export const getTokenBalance = async (contract, address, type) => {
+const getTokenBalance = async (contract, address, type) => {
   if (!contract || !address) {
     return;
   }
@@ -29,3 +29,5 @@ export const getTokenBalance = async (contract, address, type) => {
   const integer = Number(converted);
   return integer;
 };
+
+export default getTokenBalance;

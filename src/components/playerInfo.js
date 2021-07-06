@@ -1,17 +1,25 @@
 import React, { useState, useEffect } from "react";
 import "./playerInfo.css";
+import chooseExplorer from "../helpers/chooseExplorer";
+import { useSelector } from "react-redux";
+import {
+  selectWarBalance,
+  selectFightBalance,
+  selectLpTokenBalance,
+} from "../redux/tokens";
+import { selectAddress, selectAppChain } from "../redux/network";
 
-const PlayerInfo = ({
-  address,
-  warBalance,
-  fightBalance,
-  lpTokenBalance,
-  chooseExplorer,
-}) => {
+const PlayerInfo = () => {
+  const address = useSelector(selectAddress);
+  const warBalance = useSelector(selectWarBalance);
+  const lpTokenBalance = useSelector(selectLpTokenBalance);
+  const fightBalance = useSelector(selectFightBalance);
+  const appChain = useSelector(selectAppChain);
+
   let playerAddress = "Sign In";
   const openExplorer = (address) => {
     if (address) {
-      window.open(`${chooseExplorer("address") + address}`, "_blank");
+      window.open(`${chooseExplorer(appChain, "address") + address}`, "_blank");
     }
   };
 

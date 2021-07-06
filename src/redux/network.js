@@ -10,6 +10,7 @@ const initialState = {
   network: "mainnet",
   userChain: "",
   appChain: "0x1",
+  web3Modal: {},
 };
 
 // Slice
@@ -41,6 +42,9 @@ const network = createSlice({
     setAppChain: (state, action) => {
       state.appChain = action.payload;
     },
+    setWeb3Modal: (state, action) => {
+      state.web3Modal = action.payload;
+    },
   },
 });
 
@@ -54,6 +58,7 @@ export const {
   setNetwork,
   setUserChain,
   setAppChain,
+  setWeb3Modal,
 } = network.actions;
 
 // Selectors
@@ -65,6 +70,7 @@ export const selectWarning = (state) => state.network.warning;
 export const selectNetworkName = (state) => state.network.network;
 export const selectUserChain = (state) => state.network.userChain;
 export const selectAppChain = (state) => state.network.appChain;
+export const selectWeb3Modal = (state) => state.network.web3Modal;
 
 // Reducer
 export default network.reducer;

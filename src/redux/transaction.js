@@ -3,10 +3,10 @@ import { createSlice } from "@reduxjs/toolkit";
 // Initial State
 const initialState = {
   loading: false,
-  approved: false,
-  approvedData: {},
-  confirmed: false,
-  confirmedData: {},
+  approved: {},
+  approvedData: [],
+  confirmed: {},
+  confirmedData: [],
 };
 
 // Slice
@@ -17,17 +17,23 @@ const transaction = createSlice({
     toggleLoading: (state) => {
       state.loading = !state.loading;
     },
-    approved: (state, action) => {
+    txApproved: (state, action) => {
       state.approved = action.payload;
+      if (action.payload.transactionHash) {
+        state.approvedData.push(action.payload.transactionHash);
+      }
     },
-    confirmed: (state, action) => {
+    txConfirmed: (state, action) => {
       state.confirmed = action.payload;
+      if (action.payload.transactionHash) {
+        state.confirmedData.push(action.payload.transactionHash);
+      }
     },
   },
 });
 
 // Actions
-export const { toggleLoading, approved, confirmed } = transaction.actions;
+export const { toggleLoading, txApproved, txConfirmed } = transaction.actions;
 
 // Selectors
 export const selectLoading = (state) => state.transaction.loading;

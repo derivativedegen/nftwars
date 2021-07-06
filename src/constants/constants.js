@@ -21,7 +21,7 @@ export const chainData = {
   },
 };
 
-export const contracts = {
+export const contractInfo = {
   mainnet: {
     war: "0x4d75d9e37667a2d4677ec3d74bdd9049326ad8d6",
     stake: "0x8f9593F98Bf8307236c4FaD94e5b1A9D724D95c2",

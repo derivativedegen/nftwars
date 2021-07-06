@@ -5,78 +5,85 @@ import StakeInterface from "../components/StakeInterface";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { selectUserChain, selectWarning } from "../redux/network";
+import {
+  selectUserChain,
+  selectWarning,
+  selectWeb3Modal,
+} from "../redux/network";
 import {
   selectWarBalance,
   selectFightSupply,
   selectFightCirculating,
-} from "../redux/data";
+  selectWarStakedBalance,
+  selectWarRewardsBalance,
+  selectLpTokenBalance,
+  selectLpStakedBalance,
+  selectLpRewardsBalance,
+} from "../redux/tokens";
 
 const Stake = ({
-  web3Modal,
-  warStakedBalance,
-  warRewardsBalance,
   stakeWar,
   withdrawWar,
   redeemWarRewards,
-  lpTokenBalance,
-  lpStakedBalance,
-  lpRewardsBalance,
   stakeLPToken,
   withdrawLPToken,
   redeemLPRewards,
-  chooseExplorer,
 }) => {
+  // Hooks
+  const ethereum = window.ethereum;
+  const history = useHistory();
+  const userChain = useSelector(selectUserChain);
+  const warning = useSelector(selectWarning);
+  const web3Modal = useSelector(selectWeb3Modal);
+
+  // Component State
   const [typeOfStake, setTypeOfStake] = useState("");
   const [description, setDescription] = useState("");
   const [balance, setBalance] = useState(0);
   const [staked, setStaked] = useState(0);
   const [rewards, setRewards] = useState(0);
-  const history = useHistory();
-  const ethereum = window.ethereum;
-  const userChain = useSelector(selectUserChain);
-  const warning = useSelector(selectWarning);
 
   // Data State
   const warBalance = useSelector(selectWarBalance);
+  const warStakedBalance = useSelector(selectWarStakedBalance);
+  const warRewardsBalance = useSelector(selectWarRewardsBalance);
+  const lpTokenBalance = useSelector(selectLpTokenBalance);
+  const lpStakedBalance = useSelector(selectLpStakedBalance);
+  const lpRewardsBalance = useSelector(selectLpRewardsBalance);
   const fightSupply = useSelector(selectFightSupply);
   const fightCirculating = useSelector(selectFightCirculating);
 
-  // Check if wallet is connected
+  // Check wallet connection
   let connected = false;
   if (web3Modal) {
     web3Modal.cachedProvider ? (connected = true) : (connected = false);
   }
 
-  // Set numbers for ERC20 token as integer
-  const setWarNumbers = () => {
-    const balanceNum = Number(warBalance);
-    setBalance(balanceNum);
-    const stakedNum = Number(warStakedBalance);
-    setStaked(stakedNum);
-    const rewardsNum = Number(warRewardsBalance);
-    setRewards(rewardsNum);
+  // Set component data based on staking type
+  const setData = (typeOfStake) => {
+    switch (typeOfStake) {
+      case "WAR Tokens":
+        setBalance(warBalance);
+        setStaked(warStakedBalance);
+        setRewards(warRewardsBalance);
+        setDescription("Earn 1 FIGHT Token each day per WAR Token staked.");
+        break;
+      case "LP Tokens":
+        setBalance(lpTokenBalance);
+        setStaked(lpStakedBalance);
+        setRewards(lpRewardsBalance);
+        setDescription(
+          "Earn 100 FIGHT Tokens each day per ETH-WAR-LP Token staked."
+        );
+        break;
+    }
   };
 
-  // Set numbers for LP token as integer
-  const setLpTokenNumbers = () => {
-    const balanceNum = Number(lpTokenBalance);
-    setBalance(balanceNum);
-    const stakedNum = Number(lpStakedBalance);
-    setStaked(stakedNum);
-    const rewardsNum = Number(lpRewardsBalance);
-    setRewards(rewardsNum);
-  };
-
-  // Update numbers if balances change
+  // Update component data if type of stake or balances change
   useEffect(() => {
-    if (typeOfStake === "WAR Tokens") {
-      setWarNumbers();
-    }
-    if (typeOfStake === "LP Tokens") {
-      setLpTokenNumbers();
-    }
+    setData(typeOfStake);
   }, [
+    typeOfStake,
     warBalance,
     warStakedBalance,
     warRewardsBalance,
@@ -85,20 +92,6 @@ const Stake = ({
     lpRewardsBalance,
     userChain,
   ]);
-
-  // Set Numbers and description based on type of stake
-  useEffect(() => {
-    if (typeOfStake === "LP Tokens") {
-      setLpTokenNumbers();
-      setDescription(
-        "Earn 100 FIGHT Tokens each day per ETH-WAR-LP Token staked."
-      );
-    }
-    if (typeOfStake === "WAR Tokens") {
-      setWarNumbers();
-      setDescription("Earn 1 FIGHT Token each day per WAR Token staked.");
-    }
-  }, [typeOfStake]);
 
   return (
     <div className="col-12">
@@ -171,7 +164,6 @@ const Stake = ({
             stakeLPToken={stakeLPToken}
             withdrawLPToken={withdrawLPToken}
             redeemLPRewards={redeemLPRewards}
-            chooseExplorer={chooseExplorer}
           />
         ) : null}
       </div>

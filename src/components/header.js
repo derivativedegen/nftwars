@@ -13,26 +13,17 @@ import {
   selectWarning,
   selectUserChain,
   selectAppChain,
-  selectAddress,
+  selectWeb3Modal,
 } from "../redux/network";
-import { selectWarBalance } from "../redux/data";
 
-const Header = ({
-  web3Modal,
-  loadWeb3Modal,
-  logoutOfWeb3Modal,
-  fightBalance,
-  lpTokenBalance,
-  chooseExplorer,
-}) => {
+const Header = ({ loadWeb3Modal, logoutOfWeb3Modal }) => {
   const history = useHistory();
   const loadingState = useSelector(selectLoading);
   const connected = useSelector(selectConnected);
   const warning = useSelector(selectWarning);
   const userChain = useSelector(selectUserChain);
   const appChain = useSelector(selectAppChain);
-  const address = useSelector(selectAddress);
-  const warBalance = useSelector(selectWarBalance);
+  const web3Modal = useSelector(selectWeb3Modal);
 
   const selectedNetwork = () => {
     if (appChain == "0x1") {
@@ -92,15 +83,7 @@ const Header = ({
           </div>
           <div className="ml-3">{modalButtons}</div>
         </div>
-        {userChain && connected && !warning ? (
-          <PlayerInfo
-            chooseExplorer={chooseExplorer}
-            address={address}
-            warBalance={warBalance}
-            fightBalance={fightBalance}
-            lpTokenBalance={lpTokenBalance}
-          />
-        ) : null}
+        {userChain && connected && !warning ? <PlayerInfo /> : null}
       </div>
       <div className="mt-0">
         {userChain && connected && warning ? <Warning /> : null}

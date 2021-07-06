@@ -42,7 +42,7 @@
 .btn-disconnect {
   color: white;
   background-color: rgb(72, 31, 119);
-  box-shadow: 0 0px 20px rgba(255, 255, 255, 0.5) !important;
+  /*box-shadow: 0 0px 20px rgba(255, 255, 255, 0.5) !important;*/
   outline: none !important;
   border: 2px solid white;
   border-radius: 15px;

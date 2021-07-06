@@ -1,13 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
-import dataReducer from "./data";
+import tokensReducer from "./tokens";
 import transactionReducer from "./transaction";
 import networkReducer from "./network";
+import contractsReducer from "./contracts";
 
 const store = configureStore({
   reducer: {
-    data: dataReducer,
+    tokens: tokensReducer,
     transaction: transactionReducer,
     network: networkReducer,
+    contracts: contractsReducer,
   },
 });
 

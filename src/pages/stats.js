@@ -1,6 +1,7 @@
 import React from "react";
 import "./stats.css";
 import Button from "../ui/button";
+import chooseExplorer from "../helpers/chooseExplorer";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
@@ -8,21 +9,22 @@ import {
   selectFightCirculating,
   selectWarSupply,
   selectWarCirculating,
-} from "../redux/data";
+} from "../redux/tokens";
+import { selectContractAddresses } from "../redux/contracts";
+import { selectAppChain } from "../redux/network";
 
-const Stats = ({
-  warAddress,
-  fightAddress,
-  stakingAddress,
-  lpAddress,
-  lpStakingAddress,
-  chooseExplorer,
-}) => {
+const Stats = () => {
   const ethereum = window.ethereum;
   const fightSupply = useSelector(selectFightSupply);
   const fightCirculating = useSelector(selectFightCirculating);
   const warSupply = useSelector(selectWarSupply);
   const warCirculating = useSelector(selectWarCirculating);
+  const warAddress = useSelector(selectContractAddresses).war;
+  const fightAddress = useSelector(selectContractAddresses).fight;
+  const stakingAddress = useSelector(selectContractAddresses).stake;
+  const lpAddress = useSelector(selectContractAddresses).lp;
+  const lpStakingAddress = useSelector(selectContractAddresses).lpstake;
+  const appChain = useSelector(selectAppChain);
 
   const addFightToken = async () => {
     if (ethereum) {
@@ -134,7 +136,7 @@ const Stats = ({
             <b>Token Contract: </b>
             <br />
             <a
-              href={chooseExplorer("token") + warAddress}
+              href={chooseExplorer(appChain, "token") + warAddress}
               className="stataddress textred"
               target="_blank"
               rel="noreferrer"
@@ -146,7 +148,7 @@ const Stats = ({
             <b>Staking Contract: </b>
             <br />
             <a
-              href={chooseExplorer("address") + stakingAddress}
+              href={chooseExplorer(appChain, "address") + stakingAddress}
               className="stataddress textred"
               target="_blank"
               rel="noreferrer"
@@ -179,7 +181,7 @@ const Stats = ({
             <b>Token Contract: </b>
             <br />
             <a
-              href={chooseExplorer("token") + fightAddress}
+              href={chooseExplorer(appChain, "token") + fightAddress}
               className="stataddress textpurple2"
               target="_blank"
               rel="noreferrer"
@@ -212,7 +214,7 @@ const Stats = ({
             <b>WAR-ETH LP Token:</b>
             <br />
             <a
-              href={chooseExplorer("token") + lpAddress}
+              href={chooseExplorer(appChain, "token") + lpAddress}
               className="stataddress textred"
               target="_blank"
               rel="noreferrer"
@@ -224,7 +226,7 @@ const Stats = ({
             <b>WAR-ETH LP Token Staking Contract:</b>
             <br />
             <a
-              href={chooseExplorer("address") + lpStakingAddress}
+              href={chooseExplorer(appChain, "address") + lpStakingAddress}
               className="stataddress textred"
               target="_blank"
               rel="noreferrer"

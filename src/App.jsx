@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { ethers } from "ethers";
-import { contracts, INFURA_ID } from "./constants/constants.js";
+import { contractInfo, INFURA_ID } from "./constants/constants.js";
 import { STAKE_ABI, WAR_ABI, FIGHT_ABI, LPSTAKE_ABI } from "./constants/ABIs";
 import Start from "./pages/start";
 import Web3 from "web3";
@@ -16,9 +16,9 @@ import Header from "./components/header";
 import Stats from "./pages/stats";
 import Network from "./pages/network";
 import numberWithCommas from "./helpers/numberWithCommas";
-import { getTokenBalance } from "./helpers/getTokenBalance";
+import getTokenBalance from "./helpers/getTokenBalance";
 import { useSelector, useDispatch } from "react-redux";
-import { toggleLoading, approved, confirmed } from "./redux/transaction";
+import { toggleLoading, txApproved, txConfirmed } from "./redux/transaction";
 import {
   selectSigner,
   selectConnected,
@@ -27,42 +27,51 @@ import {
   selectAddress,
 } from "./redux/network";
 import {
-  setWarBalance,
-  setFightSupply,
-  setFightCirculating,
   setWarSupply,
   setWarCirculating,
-} from "./redux/data";
-// import Footer from "./components/footer";
+  setWarBalance,
+  setWarStakedBalance,
+  selectWarStakedBalance,
+  setWarRewardsBalance,
+  setLpTokenBalance,
+  setLpStakedBalance,
+  selectLpStakedBalance,
+  setLpRewardsBalance,
+  setFightTokenBalance,
+  setFightSupply,
+  setFightCirculating,
+} from "./redux/tokens";
+import {
+  selectContractAddresses,
+  selectContractWar,
+  selectContractLPToken,
+  selectContractStake,
+  selectContractLPStake,
+  selectContractFight,
+} from "./redux/contracts";
 
-function App({
-  contractAddresses,
-  switchChain,
-  web3Modal,
-  loadWeb3Modal,
-  logoutOfWeb3Modal,
-  chooseExplorer,
-  contractWar,
-  contractLPToken,
-  contractStake,
-  contractLPStake,
-  contractFight,
-}) {
+function App({ switchChain, loadWeb3Modal, logoutOfWeb3Modal }) {
   let web3 = new Web3(`https://mainnet.infura.io/v3/${INFURA_ID}`);
   const dispatch = useDispatch();
+
+  // Network Data
   const signer = useSelector(selectSigner);
   const connected = useSelector(selectConnected);
   const userChain = useSelector(selectUserChain);
   const appChain = useSelector(selectAppChain);
   const address = useSelector(selectAddress);
+  const contractAddresses = useSelector(selectContractAddresses);
 
-  // State for Token Balances
-  const [warStakedBalance, setWarStakedBalance] = useState(0);
-  const [warRewardsBalance, setWarRewardsBalance] = useState(0);
-  const [lpTokenBalance, setLpTokenBalance] = useState(0);
-  const [lpStakedBalance, setLpStakedBalance] = useState(0);
-  const [lpRewardsBalance, setLpRewardsBalance] = useState(0);
-  const [fightBalance, setFightTokenBalance] = useState(0);
+  // Token Data
+  const warStakedBalance = useSelector(selectWarStakedBalance);
+  const lpStakedBalance = useSelector(selectLpStakedBalance);
+
+  // Contract Data
+  const contractWar = useSelector(selectContractWar);
+  const contractLPToken = useSelector(selectContractLPToken);
+  const contractStake = useSelector(selectContractStake);
+  const contractLPStake = useSelector(selectContractLPStake);
+  const contractFight = useSelector(selectContractFight);
 
   // Get Balances
   const getAllBalances = (address) => {
@@ -79,10 +88,10 @@ function App({
       dispatch(setWarBalance(result));
     });
     getTokenBalance(contractLPToken, address, "balance").then((result) => {
-      setLpTokenBalance(result);
+      dispatch(setLpTokenBalance(result));
     });
     getTokenBalance(contractFight, address, "balance").then((result) => {
-      setFightTokenBalance(result);
+      dispatch(setFightTokenBalance(result));
     });
   };
   const getStakedBalances = (address) => {
@@ -92,12 +101,12 @@ function App({
     ) {
       getTokenBalance(contractStake, address, "stakedPolygon").then(
         (result) => {
-          setWarStakedBalance(result);
+          dispatch(setWarStakedBalance(result));
         }
       );
       getTokenBalance(contractLPStake, address, "stakedPolygon").then(
         (result) => {
-          setLpStakedBalance(result);
+          dispatch(setLpStakedBalance(result));
         }
       );
     } else {
@@ -114,12 +123,12 @@ function App({
 
       getTokenBalance(warStakingContract, address, "stakedEth").then(
         (result) => {
-          setWarStakedBalance(result);
+          dispatch(setWarStakedBalance(result));
         }
       );
       getTokenBalance(lpStakingContract, address, "stakedEth").then(
         (result) => {
-          setLpStakedBalance(result);
+          dispatch(setLpStakedBalance(result));
         }
       );
     }
@@ -127,12 +136,12 @@ function App({
   const getRewardBalances = (address) => {
     getTokenBalance(contractStake, address, "earned").then((result) => {
       if (typeof result === "number") {
-        setWarRewardsBalance(result);
+        dispatch(setWarRewardsBalance(result));
       }
     });
     getTokenBalance(contractLPStake, address, "earned").then((result) => {
       if (typeof result === "number") {
-        setLpRewardsBalance(result);
+        dispatch(setLpRewardsBalance(result));
       }
     });
   };
@@ -182,11 +191,11 @@ function App({
     );
     const approveReceipt = await tx.wait();
 
-    dispatch(approved(approveReceipt));
+    dispatch(txApproved(approveReceipt));
 
     const tx2 = await stakeContract.stake(convertedAmount);
     const stakeReceipt = await tx2.wait();
-    dispatch(confirmed(stakeReceipt));
+    dispatch(txConfirmed(stakeReceipt));
 
     if (approveReceipt && stakeReceipt) {
       getAllBalances(address);
@@ -217,11 +226,11 @@ function App({
   const getTokenStats = async () => {
     const warMainnetContract = new web3.eth.Contract(
       WAR_ABI,
-      contracts["mainnet"].war
+      contractInfo["mainnet"].war
     );
     const fightMainnetContract = new web3.eth.Contract(
       FIGHT_ABI,
-      contracts["mainnet"].fight
+      contractInfo["mainnet"].fight
     );
 
     const convert = (number) => {
@@ -256,12 +265,8 @@ function App({
     <Router>
       <div className="App">
         <Header
-          web3Modal={web3Modal}
           loadWeb3Modal={loadWeb3Modal}
           logoutOfWeb3Modal={logoutOfWeb3Modal}
-          fightBalance={fightBalance}
-          lpTokenBalance={lpTokenBalance}
-          chooseExplorer={chooseExplorer}
         />
 
         <Switch>
@@ -270,37 +275,21 @@ function App({
             <Network switchChain={switchChain} />
           </Route>
           <Route path="/menu">
-            <Menu web3Modal={web3Modal} logoutOfWeb3Modal={logoutOfWeb3Modal} />
+            <Menu logoutOfWeb3Modal={logoutOfWeb3Modal} />
           </Route>
           <Route path="/about" component={About} />
           <Route path="/addliquidity" component={AddLiquidity} />
           <Route path="/stake">
             <Stake
-              web3Modal={web3Modal}
-              warStakedBalance={warStakedBalance}
-              warRewardsBalance={warRewardsBalance}
               stakeWar={stakeWar}
               withdrawWar={withdrawWar}
               redeemWarRewards={redeemWarRewards}
-              lpTokenBalance={lpTokenBalance}
-              lpStakedBalance={lpStakedBalance}
-              lpRewardsBalance={lpRewardsBalance}
               stakeLPToken={stakeLPToken}
               withdrawLPToken={withdrawLPToken}
               redeemLPRewards={redeemLpRewards}
-              chooseExplorer={chooseExplorer}
             />
           </Route>
-          <Route path="/stats">
-            <Stats
-              warAddress={contractAddresses.war}
-              fightAddress={contractAddresses.fight}
-              stakingAddress={contractAddresses.stake}
-              lpAddress={contractAddresses.lp}
-              lpStakingAddress={contractAddresses.lpstake}
-              chooseExplorer={chooseExplorer}
-            />
-          </Route>
+          <Route path="/stats" component={Stats} />
           <Route path="/social" component={Social} />
           <Route path="/trade" component={Trade} />
         </Switch>

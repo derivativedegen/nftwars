@@ -21,14 +21,7 @@ import {
   selectLpRewardsBalance,
 } from "../redux/tokens";
 
-const Stake = ({
-  stakeWar,
-  withdrawWar,
-  redeemWarRewards,
-  stakeLPToken,
-  withdrawLPToken,
-  redeemLPRewards,
-}) => {
+const Stake = ({ stake, contractAction }) => {
   // Hooks
   const ethereum = window.ethereum;
   const history = useHistory();
@@ -43,7 +36,7 @@ const Stake = ({
   const [staked, setStaked] = useState(0);
   const [rewards, setRewards] = useState(0);
 
-  // Data State
+  // Tokens State
   const warBalance = useSelector(selectWarBalance);
   const warStakedBalance = useSelector(selectWarStakedBalance);
   const warRewardsBalance = useSelector(selectWarRewardsBalance);
@@ -158,12 +151,8 @@ const Stake = ({
             balance={balance}
             staked={staked}
             rewards={rewards}
-            stakeWar={stakeWar}
-            withdrawWar={withdrawWar}
-            redeemWarRewards={redeemWarRewards}
-            stakeLPToken={stakeLPToken}
-            withdrawLPToken={withdrawLPToken}
-            redeemLPRewards={redeemLPRewards}
+            stake={stake}
+            contractAction={contractAction}
           />
         ) : null}
       </div>

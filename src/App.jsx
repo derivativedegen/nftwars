@@ -156,14 +156,14 @@ function App({ switchChain, loadWeb3Modal, logoutOfWeb3Modal }) {
     clearInterval(refreshRewards);
   }, 1000 * 60 * 10);
 
-  // Get All Balances Init and If Address Changes
+  // Get All Balances INIT and If Address Changes
   useEffect(() => {
     if (connected && address && userChain === appChain) {
       getAllBalances(address);
     }
   }, [address]);
 
-  // Staking & Redeeming
+  // Staking & Redeeming Functions
   const contractAction = async (contract, action) => {
     dispatch(toggleLoading());
     let tx;
@@ -202,26 +202,7 @@ function App({ switchChain, loadWeb3Modal, logoutOfWeb3Modal }) {
     dispatch(toggleLoading());
   };
 
-  const stakeWar = (amount) => {
-    stake(contractWar, contractStake, amount);
-  };
-  const withdrawWar = () => {
-    contractAction(contractStake, "withdraw");
-  };
-  const redeemWarRewards = () => {
-    contractAction(contractStake, "redeem");
-  };
-  const stakeLPToken = (amount) => {
-    stake(contractLPToken, contractLPStake, amount);
-  };
-  const withdrawLPToken = () => {
-    contractAction(contractLPStake, "withdraw");
-  };
-  const redeemLpRewards = () => {
-    contractAction(contractLPStake, "redeem");
-  };
-
-  // Pull WAR & FIGHT Token Statistics on Init
+  // Pull WAR & FIGHT Token Statistics on INIT
   const getTokenStats = async () => {
     const warMainnetContract = new web3.eth.Contract(
       WAR_ABI,
@@ -276,14 +257,7 @@ function App({ switchChain, loadWeb3Modal, logoutOfWeb3Modal }) {
             <Menu logoutOfWeb3Modal={logoutOfWeb3Modal} />
           </Route>
           <Route path="/stake">
-            <Stake
-              stakeWar={stakeWar}
-              withdrawWar={withdrawWar}
-              redeemWarRewards={redeemWarRewards}
-              stakeLPToken={stakeLPToken}
-              withdrawLPToken={withdrawLPToken}
-              redeemLPRewards={redeemLpRewards}
-            />
+            <Stake stake={stake} contractAction={contractAction} />
           </Route>
           <Route exact path="/" component={Start} />
           <Route path="/about" component={About} />

@@ -2,24 +2,36 @@ import React, { useState } from "react";
 import "./StakeInterface.css";
 import Button from "../ui/button";
 import StakeModal from "./StakeModal";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { txApproved, txConfirmed } from "../redux/transaction";
+import {
+  selectContractLPStake,
+  selectContractLPToken,
+  selectContractStake,
+  selectContractWar,
+} from "../redux/contracts";
 
 const StakeInterface = ({
   type,
   balance,
   staked,
   rewards,
-  stakeWar,
-  withdrawWar,
-  redeemWarRewards,
-  stakeLPToken,
-  withdrawLPToken,
-  redeemLPRewards,
+  stake,
+  contractAction,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  // Hooks
   const dispatch = useDispatch();
 
+  // Component State
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Contracts State
+  const contractWar = useSelector(selectContractWar);
+  const contractStake = useSelector(selectContractStake);
+  const contractLPToken = useSelector(selectContractLPToken);
+  const contractLPStake = useSelector(selectContractLPStake);
+
+  // Show or Hide modal
   const showModal = () => {
     dispatch(txApproved(""));
     dispatch(txConfirmed(""));
@@ -44,14 +56,16 @@ const StakeInterface = ({
         alert(`Please enter an amount to stake.`);
         return;
       }
-      await stakeLPToken(amount);
+      //await stakeLPToken(amount);
+      await stake(contractLPToken, contractLPStake, amount);
     }
     if (type === "WAR Tokens") {
       if (amount < 5) {
         alert(`The minimum amount of ${type} you can stake is 5.`);
         return;
       }
-      await stakeWar(amount);
+      //await stakeWar(amount);
+      await stake(contractWar, contractStake, amount);
     }
   };
 
@@ -62,10 +76,10 @@ const StakeInterface = ({
       return;
     }
     if (type === "WAR Tokens") {
-      withdrawWar();
+      contractAction(contractStake, "withdraw");
     }
     if (type === "LP Tokens") {
-      withdrawLPToken();
+      contractAction(contractLPStake, "withdraw");
     }
   };
 
@@ -76,10 +90,10 @@ const StakeInterface = ({
       return;
     }
     if (type === "WAR Tokens") {
-      redeemWarRewards();
+      contractAction(contractStake, "redeem");
     }
     if (type === "LP Tokens") {
-      redeemLPRewards();
+      contractAction(contractLPStake, "redeem");
     }
   };
 

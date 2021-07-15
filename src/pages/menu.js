@@ -27,6 +27,12 @@ const Menu = ({ logoutOfWeb3Modal }) => {
           </li>
           <li
             className="nav-item textspaced"
+            onClick={() => history.push("/game")}
+          >
+            Game
+          </li>
+          <li
+            className="nav-item textspaced"
             onClick={() => history.push("/stake")}
           >
             Stake

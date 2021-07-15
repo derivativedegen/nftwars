@@ -15398,6 +15398,11 @@ react-transition-group@^4.4.1:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
+react-unity-webgl@7.1.13:
+  version "7.1.13"
+  resolved "https://registry.yarnpkg.com/react-unity-webgl/-/react-unity-webgl-7.1.13.tgz#218a193889af506128d4dc44cb7b500850c400e6"
+  integrity sha512-uxo007ofvKO72ygsaMJKdEjjBnNvvNEgSCHKN1wvrebY+y4TIA5SIehr/jMQwVDyu5V+N7tOQa+mMPKaMEZEBg==
+
 react@^16.14.0, react@^16.8.6:
   version "16.14.0"
   resolved "https://registry.yarnpkg.com/react/-/react-16.14.0.tgz#94d776ddd0aaa37da3eda8fc5b6b18a4c9a3114d"

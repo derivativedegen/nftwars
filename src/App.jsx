@@ -56,6 +56,11 @@ function App({ switchChain, loadWeb3Modal, logoutOfWeb3Modal }) {
   let web3 = new Web3(`https://mainnet.infura.io/v3/${INFURA_ID}`);
   const dispatch = useDispatch();
 
+  // DEVELOPER MODE
+  useEffect(() => {
+    dispatch(setTesting(true)); // set TRUE for test features & networks
+  }, []);
+
   // Network Data
   const signer = useSelector(selectSigner);
   const connected = useSelector(selectConnected);
@@ -241,11 +246,6 @@ function App({ switchChain, loadWeb3Modal, logoutOfWeb3Modal }) {
   };
   useEffect(() => {
     getTokenStats();
-  }, []);
-
-  // DEVELOPER MODE
-  useEffect(() => {
-    dispatch(setTesting(true));
   }, []);
 
   return (

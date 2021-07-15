@@ -4,3 +4,10 @@
   padding: 0px;
   overflow: hidden;
 }
+
+.bignumber-red {
+  font-size: 5rem;
+  font-weight: 200;
+  color: rgb(223, 82, 81) !important;
+  margin-bottom: 1rem;
+}

@@ -100,7 +100,7 @@ const StakeInterface = ({
   return (
     <div className="col-12 d-flex justify-content-around flex-wrap">
       <div className="text-center p-2">
-        <h1 className="bignumber textred textspaced">
+        <h1 className="bignumber textspaced">
           {balance && balance < 10 ? balance.toFixed(2) : balance.toFixed(0)}
         </h1>
         <h5 className="textred textspaced">{type}</h5>
@@ -117,7 +117,7 @@ const StakeInterface = ({
         </div>
       </div>
       <div className="text-center p-2">
-        <h1 className="bignumber textred textspaced">
+        <h1 className="bignumber textspaced">
           {staked && staked < 10 ? staked.toFixed(2) : staked.toFixed(0)}
         </h1>
         <h5 className="textred textspaced">{type}</h5>
@@ -129,7 +129,7 @@ const StakeInterface = ({
         />
       </div>
       <div className="text-center p-2">
-        <h1 className="bignumber textred textspaced">
+        <h1 className="bignumber textspaced">
           {rewards && rewards < 10 ? rewards.toFixed(2) : rewards.toFixed(0)}
         </h1>
         <h5 className="textred textspaced">FIGHT Tokens</h5>

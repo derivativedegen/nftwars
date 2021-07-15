@@ -1,9 +1,12 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { selectTesting } from "../redux/network";
 import "./menu.css";
 
 const Menu = ({ logoutOfWeb3Modal }) => {
   const history = useHistory();
+  const testing = useSelector(selectTesting);
 
   const disconnect = async () => {
     //window.location = "/";
@@ -19,18 +22,21 @@ const Menu = ({ logoutOfWeb3Modal }) => {
         </h2>
 
         <ul className="navbar-nav">
+          {testing ? (
+            <li
+              className="nav-item textspaced"
+              onClick={() => history.push("/game")}
+            >
+              Play
+            </li>
+          ) : null}
           <li
             className="nav-item textspaced"
             onClick={() => history.push("/about")}
           >
             About
           </li>
-          <li
-            className="nav-item textspaced"
-            onClick={() => history.push("/game")}
-          >
-            Game
-          </li>
+
           <li
             className="nav-item textspaced"
             onClick={() => history.push("/stake")}

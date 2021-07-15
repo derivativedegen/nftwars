@@ -1,4 +1,6 @@
 .game-container {
-  width: 480px;
-  height: 300px;
+  border: 2px solid rgba(223, 82, 81, 0.75);
+  border-radius: 15pt;
+  padding: 0px;
+  overflow: hidden;
 }

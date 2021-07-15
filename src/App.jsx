@@ -26,6 +26,7 @@ import {
   selectUserChain,
   selectAppChain,
   selectAddress,
+  setTesting,
 } from "./redux/network";
 import {
   setWarSupply,
@@ -77,11 +78,11 @@ function App({ switchChain, loadWeb3Modal, logoutOfWeb3Modal }) {
   // Get Balances
   const getAllBalances = (address) => {
     if (address) {
-      dispatch(toggleLoading());
+      dispatch(toggleLoading(true));
       getTokenBalances(address);
       getStakedBalances(address);
       getRewardBalances(address);
-      dispatch(toggleLoading());
+      dispatch(toggleLoading(false));
     }
   };
   const getTokenBalances = (address) => {
@@ -166,7 +167,7 @@ function App({ switchChain, loadWeb3Modal, logoutOfWeb3Modal }) {
 
   // Staking & Redeeming Functions
   const contractAction = async (contract, action) => {
-    dispatch(toggleLoading());
+    dispatch(toggleLoading(true));
     let tx;
     switch (action) {
       case "withdraw":
@@ -180,10 +181,10 @@ function App({ switchChain, loadWeb3Modal, logoutOfWeb3Modal }) {
     if (receipt) {
       getAllBalances(address);
     }
-    dispatch(toggleLoading());
+    dispatch(toggleLoading(false));
   };
   const stake = async (tokenContract, stakeContract, amount) => {
-    dispatch(toggleLoading());
+    dispatch(toggleLoading(true));
     const convertedAmount = web3.utils.toWei(`${amount}`);
     const tx = await tokenContract.approve(
       stakeContract.address,
@@ -200,7 +201,7 @@ function App({ switchChain, loadWeb3Modal, logoutOfWeb3Modal }) {
     if (approveReceipt && stakeReceipt) {
       getAllBalances(address);
     }
-    dispatch(toggleLoading());
+    dispatch(toggleLoading(false));
   };
 
   // Pull WAR & FIGHT Token Statistics on INIT
@@ -240,6 +241,11 @@ function App({ switchChain, loadWeb3Modal, logoutOfWeb3Modal }) {
   };
   useEffect(() => {
     getTokenStats();
+  }, []);
+
+  // DEVELOPER MODE
+  useEffect(() => {
+    dispatch(setTesting(true));
   }, []);
 
   return (

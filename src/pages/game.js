@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Unity, { UnityContent } from "react-unity-webgl";
+import { useDispatch } from "react-redux";
+import { toggleLoading } from "../redux/transaction";
+import "./game.css";
+import { showLoading, hideLoading } from "react-redux-loading-bar";
+import LoadingBar from "react-top-loading-bar";
 
 const unityContent = new UnityContent(
   "Build/Builds.json",
@@ -8,7 +13,19 @@ const unityContent = new UnityContent(
 );
 
 export default function Game(props) {
+  const dispatch = useDispatch();
   const [progression, setProgression] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    isLoaded ? dispatch(toggleLoading(false)) : dispatch(toggleLoading(true));
+  }, [isLoaded]);
+
+  useEffect(function () {
+    unityContent.on("loaded", function () {
+      setIsLoaded(true);
+    });
+  }, []);
 
   useEffect(function () {
     unityContent.on("progress", function (progression) {
@@ -18,18 +35,32 @@ export default function Game(props) {
 
   return (
     <div className="col-12">
+      <LoadingBar color="#fff" progress={progression * 100} />
       <div className="d-flex flex-column justify-content-center">
-        <div className="col-8 offset-2 text-center">
-          <h3>Loading {progression * 100} percent...</h3>
+        {isLoaded ? null : (
+          <div className="col-8 offset-2 text-center justify-content-center d-flex flex-column">
+            <h3>Loading... </h3>
+            <h1 className="bignumber textred textspaced">
+              {(progression * 100).toFixed(2)}%
+            </h1>
+          </div>
+        )}
+        <div
+          className={`game-container col-12 offset-0 col-md-10 offset-md-1 text-center ${
+            isLoaded ? "visible" : "invisible"
+          }`}
+        >
           <Unity unityContent={unityContent} />
         </div>
       </div>
 
-      <div class="mt-4 d-flex justify-content-center">
-        <Link to="/menu">
-          <button className="menuButton shadow-lg"> Main Menu </button>
-        </Link>
-      </div>
+      {isLoaded ? (
+        <div class="mt-4 d-flex justify-content-center">
+          <Link to="/menu">
+            <button className="menuButton shadow-lg"> Main Menu </button>
+          </Link>
+        </div>
+      ) : null}
     </div>
   );
 }

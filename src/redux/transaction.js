@@ -14,8 +14,8 @@ const transaction = createSlice({
   name: "transaction",
   initialState: initialState,
   reducers: {
-    toggleLoading: (state) => {
-      state.loading = !state.loading;
+    toggleLoading: (state, action) => {
+      state.loading = action.payload;
     },
     txApproved: (state, action) => {
       state.approved = action.payload;

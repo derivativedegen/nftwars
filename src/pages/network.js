@@ -19,12 +19,13 @@ import {
   selectWarning,
   selectUserChain,
   selectAppChain,
+  selectTesting,
 } from "../redux/network";
 
 const Network = ({ switchChain }) => {
   const history = useHistory();
   const ethereum = window.ethereum;
-  const testing = true;
+  const testing = useSelector(selectTesting);
   const warning = useSelector(selectWarning);
   const userChain = useSelector(selectUserChain);
   const appChain = useSelector(selectAppChain);

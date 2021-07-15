@@ -4,7 +4,6 @@ import Unity, { UnityContent } from "react-unity-webgl";
 import { useDispatch } from "react-redux";
 import { toggleLoading } from "../redux/transaction";
 import "./game.css";
-import { showLoading, hideLoading } from "react-redux-loading-bar";
 import LoadingBar from "react-top-loading-bar";
 
 const unityContent = new UnityContent(
@@ -16,6 +15,8 @@ export default function Game(props) {
   const dispatch = useDispatch();
   const [progression, setProgression] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [message, setMessage] = useState("");
+  const [hasError, setHasError] = useState(false);
 
   // Show/hide header spinning Loader
   useEffect(() => {
@@ -36,19 +37,49 @@ export default function Game(props) {
     });
   }, []);
 
+  // Show game errors
+  useEffect(() => {
+    unityContent.on("error", (message) => {
+      setHasError(true);
+      setMessage(message);
+    });
+  });
+
+  const errorModule = () => {
+    return (
+      <div className="error-message mb-4">
+        <h3 className="textred textspaced">
+          There was an error. Please reload the game or contact us if this
+          persists.
+        </h3>
+        {/* <div class="mt-4 d-flex justify-content-center">
+          <Link to="/menu">
+            <button className="menuButton shadow-lg"> Main Menu </button>
+          </Link>
+        </div> */}
+      </div>
+    );
+  };
+
+  const loadingModule = () => {
+    return (
+      <div className="col-12 p-0 m-0 d-flex flex-column">
+        <h3 className="textred">Loading... </h3>
+        <h1 className="bignumber textspaced">
+          {(progression * 100).toFixed(2)}%
+        </h1>
+      </div>
+    );
+  };
+
   return (
     <div className="col-12">
       <LoadingBar color="#e45251" progress={progression * 100} />
 
-      <div className="d-flex flex-column justify-content-center">
-        {isLoaded ? null : (
-          <div className="col-12 p-0 m-0 text-center justify-content-center d-flex flex-column">
-            <h3 className="textred">Loading... </h3>
-            <h1 className="bignumber textspaced">
-              {(progression * 100).toFixed(2)}%
-            </h1>
-          </div>
-        )}
+      <div className="d-flex flex-column text-center justify-content-center">
+        {message ? errorModule() : null}
+
+        {isLoaded ? null : loadingModule()}
 
         <div
           className={`game-container col-12 offset-0 col-md-10 offset-md-1 text-center ${

@@ -1,7 +1,7 @@
 {
-  "companyName": "DefaultCompany",
-  "productName": "Etherium Card Game",
-  "productVersion": "1.4.0",
+  "companyName": "Dhruv194",
+  "productName": "BoxShooter",
+  "productVersion": "0.1",
   "dataUrl": "Builds.data.unityweb",
   "wasmCodeUrl": "Builds.wasm.code.unityweb",
   "wasmFrameworkUrl": "Builds.wasm.framework.unityweb",
@@ -9,7 +9,8 @@
   "webglContextAttributes": { "preserveDrawingBuffer": false },
   "splashScreenStyle": "Dark",
   "backgroundColor": "#231F20",
+  "cacheControl": { "default": "must-revalidate" },
   "developmentBuild": false,
   "multithreading": false,
-  "unityVersion": "2019.4.0f1"
+  "unityVersion": "2019.4.18f1"
 }

@@ -30,18 +30,25 @@ const Menu = ({ logoutOfWeb3Modal }) => {
               Play
             </li>
           ) : null}
-          <li
-            className="nav-item textspaced"
-            onClick={() => history.push("/about")}
-          >
-            About
-          </li>
-
+          {testing ? (
+            <li
+              className="nav-item textspaced"
+              onClick={() => history.push("/shop")}
+            >
+              Shop
+            </li>
+          ) : null}
           <li
             className="nav-item textspaced"
             onClick={() => history.push("/stake")}
           >
             Stake
+          </li>
+          <li
+            className="nav-item textspaced"
+            onClick={() => history.push("/about")}
+          >
+            About
           </li>
           <li
             className="nav-item textspaced"

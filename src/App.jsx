@@ -16,6 +16,7 @@ import Header from "./components/header";
 import Stats from "./pages/stats";
 import Network from "./pages/network";
 import Game from "./pages/game";
+import Shop from "./pages/shop";
 import numberWithCommas from "./helpers/numberWithCommas";
 import getTokenBalance from "./helpers/getTokenBalance";
 import { useSelector, useDispatch } from "react-redux";
@@ -258,12 +259,13 @@ function App({ switchChain, loadWeb3Modal, logoutOfWeb3Modal }) {
 
         <Switch>
           <Route exact path="/" component={Start} />
+          <Route path="/game" component={Game} />
           <Route path="/about" component={About} />
+          <Route path="/shop" component={Shop} />
           <Route path="/addliquidity" component={AddLiquidity} />
           <Route path="/stats" component={Stats} />
           <Route path="/social" component={Social} />
           <Route path="/trade" component={Trade} />
-          <Route path="/game" component={Game} />
           <Route path="/network">
             <Network switchChain={switchChain} />
           </Route>

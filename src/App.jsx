@@ -17,6 +17,7 @@ import Stats from "./pages/stats";
 import Network from "./pages/network";
 import Game from "./pages/game";
 import Shop from "./pages/shop";
+import Nft from "./pages/nft";
 import numberWithCommas from "./helpers/numberWithCommas";
 import getTokenBalance from "./helpers/getTokenBalance";
 import { useSelector, useDispatch } from "react-redux";
@@ -266,6 +267,7 @@ function App({ switchChain, loadWeb3Modal, logoutOfWeb3Modal }) {
           <Route path="/stats" component={Stats} />
           <Route path="/social" component={Social} />
           <Route path="/trade" component={Trade} />
+          <Route path="/nft/:id" component={Nft} />
           <Route path="/network">
             <Network switchChain={switchChain} />
           </Route>

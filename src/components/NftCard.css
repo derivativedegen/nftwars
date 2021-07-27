@@ -1,0 +1,50 @@
+.card-container {
+  background: rgba(0, 0, 0, 0.5);
+  background-image: radial-gradient(
+    ellipse at 50px 10px,
+    rgba(100, 100, 100, 0.1) 0%,
+    rgba(100, 100, 100, 0.1) 1%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+  border: 1px solid rgb(150, 150, 150, 0.2);
+  border-radius: 20px;
+  height: 300px;
+  width: 250px;
+  margin: 15px;
+  overflow: hidden;
+  position: relative;
+}
+
+.shadow-lg {
+  -webkit-box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+}
+
+.nft_image {
+  height: 100%;
+}
+
+.info_button {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  padding: 0px 10px;
+}
+
+.purchase {
+  width: 100%;
+  border: 2px solid white;
+  font-weight: bold;
+  color: rgb(223, 82, 81);
+  background-color: rgba(0, 0, 0, 0.8);
+  /* background-color: rgba(72, 31, 119, 1); */
+  /* background-color: rgba(223, 82, 81, 1); */
+  /* color: rgb(72, 31, 119); */
+  border-radius: 5px;
+}
+
+@media only screen and (min-width: 576px) {
+  .card-container {
+    height: 350px;
+  }
+}

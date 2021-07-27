@@ -22,11 +22,22 @@ export default function Nft(props) {
             <img src={image} className="nft_image" alt="nft_image" />
           </div>
 
-          <div className="nft_details">
-            <h4 className="textspaced">Minted: 7/27/2021</h4>
-            <h4 className="textspaced">Artist: Dominic Racho</h4>
-            <h4 className="textspaced">Power: xxxxxxx</h4>
-            <h4 className="textspaced">Weakness: xxxxxxx</h4>
+          <div className="d-flex flex-column">
+            <div className="nft_details">
+              <h4 className="textspaced">Minted: xx/xx/xxxx</h4>
+              <h4 className="textspaced">Artist: xxxxxxx</h4>
+              <h4 className="textspaced">Power: xxxxxxx</h4>
+              <h4 className="textspaced">Weakness: xxxxxxx</h4>
+            </div>
+            <div className="d-flex flex-column align-items-center mt-5">
+              <h1 className="textred textspaced">3000 FIGHT</h1>
+              <button
+                onClick={() => alert(`You bought collectible ${itemDisplay}`)}
+                className="btn-connect"
+              >
+                Purchase
+              </button>
+            </div>
           </div>
         </div>
       </div>

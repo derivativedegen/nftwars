@@ -24,7 +24,7 @@ import {
 const Network = ({ switchChain }) => {
   const history = useHistory();
   const ethereum = window.ethereum;
-  const testing = true;
+  const testing = false;
   const warning = useSelector(selectWarning);
   const userChain = useSelector(selectUserChain);
   const appChain = useSelector(selectAppChain);

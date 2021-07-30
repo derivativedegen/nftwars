@@ -299,7 +299,7 @@ function App({ switchChain, loadWeb3Modal, logoutOfWeb3Modal }) {
           return item.tokenId;
         });
         const tokenJsons = await getAllTokenJsons(hash, shopTokens);
-        console.log(tokenJsons);
+        // console.log(tokenJsons);
         dispatch(setTokenJsons(tokenJsons));
       };
       getTokenJsons();

@@ -9,13 +9,16 @@ export default function Nftcard(props) {
   const imagePull = gateway + imageHash;
 
   return (
-    <div className="card-container shadow-lg">
+    <div
+      className="card-container shadow-lg clickable"
+      onClick={() => showItem(id)}
+    >
       <img src={imagePull} className="nft_image" alt="" />
-      <div className="info_button">
+      {/* <div className="info_button">
         <button onClick={() => showItem(id)} className="purchase">
           INFO
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }

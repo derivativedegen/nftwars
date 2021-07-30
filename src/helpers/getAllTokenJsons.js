@@ -1,10 +1,10 @@
-export const getAllTokenJsons = async (hash, userTokens) => {
+export const getAllTokenJsons = async (hash, tokeIdArray) => {
   if (!hash) return;
   const gateway = "https://gateway.pinata.cloud/ipfs/";
   const fullHash = gateway + hash + "/";
-  console.log(fullHash);
+  // console.log(fullHash);
 
-  const jsons = userTokens.map(async (tokenID) => {
+  const jsons = tokeIdArray.map(async (tokenID) => {
     return await fetch(`${fullHash}${tokenID}`)
       .then((response) => {
         return response.json();

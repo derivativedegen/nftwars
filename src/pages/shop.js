@@ -22,8 +22,8 @@ export default function Shop(props) {
   return (
     <div className="col-12">
       <div className="d-flex flex-column text-center justify-content-center">
-        <h1 className="bomberescort textred textspaced shop-title">NFT Shop</h1>
-        <p>Collect all the NFT Wars collectibles to reign supreme leader!</p>
+        <h1 className="bomberescort textred textspaced shop-title">Shop</h1>
+        <p>Collect all the NFT Wars pieces to reign supreme leader!</p>
       </div>
 
       <div className="d-flex flex-row flex-wrap justify-content-center col-12 col-md-10 offset-md-1 mt-3">

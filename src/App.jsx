@@ -52,7 +52,19 @@ import {
   selectContractStake,
   selectContractLPStake,
   selectContractFight,
+  selectContractNft,
+  selectContractShop,
 } from "./redux/contracts";
+import {
+  selectFolderHash,
+  selectShopItems,
+  selectTokenJsons,
+  setFolderHash,
+  setShopItems,
+  setTokenJsons,
+} from "./redux/nfts";
+import { getShopItems } from "./helpers/getShopItems";
+import { getAllTokenJsons } from "./helpers/getAllTokenJsons";
 
 function App({ switchChain, loadWeb3Modal, logoutOfWeb3Modal }) {
   let web3 = new Web3(`https://mainnet.infura.io/v3/${INFURA_ID}`);
@@ -81,6 +93,12 @@ function App({ switchChain, loadWeb3Modal, logoutOfWeb3Modal }) {
   const contractStake = useSelector(selectContractStake);
   const contractLPStake = useSelector(selectContractLPStake);
   const contractFight = useSelector(selectContractFight);
+
+  // Marketplace Data
+  const nftContract = useSelector(selectContractNft);
+  const shopContract = useSelector(selectContractShop);
+  const hash = useSelector(selectFolderHash);
+  const shopItems = useSelector(selectShopItems);
 
   // Get Balances
   const getAllBalances = (address) => {
@@ -249,6 +267,44 @@ function App({ switchChain, loadWeb3Modal, logoutOfWeb3Modal }) {
   useEffect(() => {
     getTokenStats();
   }, []);
+
+  // Get Shop Items
+  useEffect(() => {
+    if (Object.keys(shopContract).length > 0) {
+      const getItems = async () => {
+        const items = await getShopItems(shopContract);
+        dispatch(setShopItems(items));
+      };
+      getItems();
+    }
+  }, [shopContract]);
+
+  // Get IFS Folder Hash
+  useEffect(() => {
+    if (Object.keys(nftContract).length > 0) {
+      const getFolderHash = async () => {
+        const itemHash = await nftContract.tokenURI(0);
+        const folderHash = itemHash.slice(7, 53);
+        dispatch(setFolderHash(folderHash));
+      };
+      getFolderHash();
+    }
+  }, [nftContract]);
+
+  // Get Token JSONs
+  useEffect(() => {
+    if (Object.keys(nftContract).length > 0) {
+      const getTokenJsons = async () => {
+        const shopTokens = shopItems.map((item) => {
+          return item.tokenId;
+        });
+        const tokenJsons = await getAllTokenJsons(hash, shopTokens);
+        console.log(tokenJsons);
+        dispatch(setTokenJsons(tokenJsons));
+      };
+      getTokenJsons();
+    }
+  }, [nftContract, hash]);
 
   return (
     <Router>

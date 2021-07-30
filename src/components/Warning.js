@@ -2,7 +2,8 @@ import React from "react";
 import "./Warning.css";
 import { useHistory } from "react-router-dom";
 
-function Warning({ appChain, userChain }) {
+function Warning(props) {
+  const { warningText } = props;
   const history = useHistory();
 
   return (
@@ -13,7 +14,7 @@ function Warning({ appChain, userChain }) {
           history.push("/network");
         }}
       >
-        Your Wallet Network doesn't match the App Network.
+        {warningText || `Your Wallet Network doesn't match the App Network.`}
       </h4>
     </div>
   );

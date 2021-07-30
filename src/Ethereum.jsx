@@ -241,19 +241,21 @@ function Network() {
     );
     dispatch(setContractFight(contractFight));
 
-    contractShop = new ethers.Contract(
-      contractInfo.mainnet.marketplace.shop,
-      MARKETPLACE_ABI,
-      signer
-    );
-    dispatch(setContractShop(contractShop));
-
-    contractNft = new ethers.Contract(
-      contractInfo.mainnet.marketplace.nft,
-      NFT_ABI,
-      signer
-    );
-    dispatch(setContractNft(contractNft));
+    if (userChain === "0x3") {
+      // CHANGE TO MAINNET FOR MARKETPLACE LAUNCH
+      contractShop = new ethers.Contract(
+        contractInfo.mainnet.marketplace.shop,
+        MARKETPLACE_ABI,
+        signer
+      );
+      contractNft = new ethers.Contract(
+        contractInfo.mainnet.marketplace.nft,
+        NFT_ABI,
+        signer
+      );
+      dispatch(setContractShop(contractShop));
+      dispatch(setContractNft(contractNft));
+    }
   }
 
   // Warn user if networks aren't matching

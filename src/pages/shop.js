@@ -1,22 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./shop.css";
 import { Link } from "react-router-dom";
 import NftCard from "../components/NftCard";
 import { useSelector } from "react-redux";
 import { selectShopItems, selectTokenJsons } from "../redux/nfts";
 import Nft from "../components/Nft";
-import { selectAppChain } from "../redux/network";
+import { selectUserChain } from "../redux/network";
 
 export default function Shop(props) {
   const shopItems = useSelector(selectShopItems);
   const tokenJsons = useSelector(selectTokenJsons);
+  const userChain = useSelector(selectUserChain);
+  const [warning, setWarning] = useState(false);
 
+  useEffect(() => {
+    if (userChain === "0x3") {
+      // CHANGE TO MAINNET FOR MARKETPLACE LAUNCH
+      setWarning(false);
+    } else {
+      setWarning(true);
+    }
+  }, [userChain]);
+
+  const [itemId, setItemId] = useState(undefined);
   const [itemNumber, setItemNumber] = useState(undefined);
   const [showItem, setShowItem] = useState(false);
 
-  const displayItem = (id) => {
+  const displayItem = (key, id) => {
     setShowItem(!showItem);
-    setItemNumber(id);
+    setItemId(id);
+    setItemNumber(key);
   };
 
   return (
@@ -29,9 +42,22 @@ export default function Shop(props) {
       <div className="d-flex flex-row flex-wrap justify-content-center col-12 col-md-10 offset-md-1 mt-3">
         {!tokenJsons && <h1 className="textred textspaced">Loading Shop...</h1>}
 
+        {warning && (
+          <div className="d-flex flex-column align-items-center mt-3 mb-3">
+            <h1 className="textred text-center">
+              The NFT Wars Shop is only available on Ropsten Network.
+              {/* CHANGE FOR MARKETPLACE LAUNCH */}
+            </h1>
+
+            <Link to="/network">
+              <button className="btn-disconnect">Change Network</button>
+            </Link>
+          </div>
+        )}
+
         {showItem && (
           <Nft
-            id={itemNumber}
+            id={itemId}
             json={tokenJsons[itemNumber]}
             displayItem={displayItem}
             price={shopItems[itemNumber].price}
@@ -49,6 +75,7 @@ export default function Shop(props) {
                 artist={nft.artist}
                 attributes={nft.attributes}
                 id={shopItems[i].tokenId}
+                number={i}
                 showItem={displayItem}
               />
             );

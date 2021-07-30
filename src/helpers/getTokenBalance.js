@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import { convertBigNumEth } from "./convertBigNumEth";
 
 const getTokenBalance = async (contract, address, type) => {
   if (!contract || !address) {
@@ -22,12 +23,8 @@ const getTokenBalance = async (contract, address, type) => {
       break;
   }
 
-  const bigNum = ethers.BigNumber.from(balance).toString();
-  const converted = ethers.utils
-    .formatEther(bigNum)
-    .match(/^-?\d+(?:\.\d{0,8})?/);
-  const integer = Number(converted);
-  return integer;
+  const convertedBalance = convertBigNumEth(balance);
+  return convertedBalance;
 };
 
 export default getTokenBalance;

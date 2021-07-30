@@ -9,6 +9,8 @@ const initialState = {
   contractStake: {},
   contractLPStake: {},
   contractFight: {},
+  contractShop: {},
+  contractNft: {},
 };
 
 // Slice
@@ -34,6 +36,12 @@ const contracts = createSlice({
     setContractFight: (state, action) => {
       state.contractFight = action.payload;
     },
+    setContractShop: (state, action) => {
+      state.contractShop = action.payload;
+    },
+    setContractNft: (state, action) => {
+      state.contractNft = action.payload;
+    },
   },
 });
 
@@ -45,6 +53,8 @@ export const {
   setContractStake,
   setContractLPStake,
   setContractFight,
+  setContractShop,
+  setContractNft,
 } = contracts.actions;
 
 // Selectors
@@ -55,6 +65,8 @@ export const selectContractLPToken = (state) => state.contracts.contractLPToken;
 export const selectContractStake = (state) => state.contracts.contractStake;
 export const selectContractLPStake = (state) => state.contracts.contractLPStake;
 export const selectContractFight = (state) => state.contracts.contractFight;
+export const selectContractShop = (state) => state.contracts.contractShop;
+export const selectContractNft = (state) => state.contracts.contractNft;
 
 // Reducer
 export default contracts.reducer;

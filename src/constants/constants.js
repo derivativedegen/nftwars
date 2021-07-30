@@ -1,6 +1,8 @@
 export const INFURA_ID = process.env.REACT_APP_INFURA_ID;
 export const POLYGON_ID = process.env.REACT_APP_POLYGON_ID;
 
+export const gateway = "https://gateway.pinata.cloud/ipfs/";
+
 export const chainData = {
   mainnet: {
     network: 1,
@@ -27,6 +29,10 @@ export const contractInfo = {
     lp: "0x3127bbbc05f343192855ea40b54a34831ce72e04",
     lpstake: "0xd7c0dB1d716d11FDE3D9B375C086fCA99252D62F",
     fight: "0x2ba55a162a86c005b900c9cc63be0336e2bb8305",
+    marketplace: {
+      nft: "0xC7D73947c84E84193b42B33c195aD857c62306F2",
+      shop: "0x736D550bFF53D9B4cF2f98F2eC9188A864A185C8",
+    },
   },
   ropsten: {
     war: "0x00F8B0C5137619359E6587671b84D0fB090740cB",

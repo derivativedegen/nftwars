@@ -3,12 +3,12 @@ import "./nft.css";
 import "../components/NftCard.css";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { selectAllNfts } from "../redux/nfts";
+import { selectShopItems } from "../redux/nfts";
 import { Link } from "react-router-dom";
 
 export default function Nft(props) {
   const { id } = useParams();
-  const allNfts = useSelector(selectAllNfts);
+  const allNfts = useSelector(selectShopItems);
   const image = allNfts[id];
   const itemDisplay = Number(id) + 1;
 

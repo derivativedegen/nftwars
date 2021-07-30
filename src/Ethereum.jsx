@@ -10,6 +10,8 @@ import {
   FIGHT_ABI,
   LP_ABI,
   LPSTAKE_POLYGON_ABI,
+  MARKETPLACE_ABI,
+  NFT_ABI,
 } from "./constants/ABIs";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -31,6 +33,8 @@ import {
   setWeb3Modal,
 } from "./redux/network";
 import { chainCheck } from "./helpers/chainCheck";
+// import { switchChain } from "./helpers/switchChain";
+// import { getBrowserChain } from "./helpers/getBrowserChain";
 import {
   setContractAddresses,
   selectContractAddresses,
@@ -39,7 +43,10 @@ import {
   setContractStake,
   setContractLPStake,
   setContractFight,
+  setContractShop,
+  setContractNft,
 } from "./redux/contracts";
+import { setShopContract } from "./redux/nfts";
 
 const mainnetProvider = new ethers.providers.JsonRpcProvider(
   `https://mainnet.infura.io/v3/${INFURA_ID}`
@@ -204,6 +211,8 @@ function Network() {
   let contractStake = {};
   let contractLPStake = {};
   let contractFight = {};
+  let contractShop = {};
+  let contractNft = {};
   if (Object.keys(signer).length > 0) {
     contractWar = new ethers.Contract(contractAddresses.war, WAR_ABI, signer);
     dispatch(setContractWar(contractWar));
@@ -231,6 +240,20 @@ function Network() {
       signer
     );
     dispatch(setContractFight(contractFight));
+
+    contractShop = new ethers.Contract(
+      contractInfo.mainnet.marketplace.shop,
+      MARKETPLACE_ABI,
+      signer
+    );
+    dispatch(setContractShop(contractShop));
+
+    contractNft = new ethers.Contract(
+      contractInfo.mainnet.marketplace.nft,
+      NFT_ABI,
+      signer
+    );
+    dispatch(setContractNft(contractNft));
   }
 
   // Warn user if networks aren't matching

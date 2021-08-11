@@ -33,6 +33,7 @@ export const contractInfo = {
       nft: "0xC7D73947c84E84193b42B33c195aD857c62306F2",
       shop: "0x736D550bFF53D9B4cF2f98F2eC9188A864A185C8",
     },
+    uniswap: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
   },
   ropsten: {
     war: "0x00F8B0C5137619359E6587671b84D0fB090740cB",
@@ -40,6 +41,7 @@ export const contractInfo = {
     lp: "0x95e7d627e0043930fb44a0af6ecd42006c0de3a3",
     lpstake: "0xE16F7a5F519dF5C2B0B2f96Ed78421780Ea0440c",
     fight: "0xe7d526b8E8F9d9342960461c57f7AA299b05fCB7",
+    uniswap: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
   },
   mumbai: {
     war: "0x43bF5978E3569d360414C9ddefEf302353763888",

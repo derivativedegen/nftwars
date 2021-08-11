@@ -3,10 +3,28 @@ import "./trade.css";
 import SiteFrame from "../components/siteFrame";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { selectAppChain } from "../redux/network";
+import { selectAddress, selectAppChain, selectSigner } from "../redux/network";
+import { contractInfo, INFURA_ID } from "../constants/constants";
+import { UNI_ABI } from "../constants/ABIs";
+import { ethers } from "ethers";
+import Web3 from "web3";
 
 function Trade() {
   const appChain = useSelector(selectAppChain);
+  const signer = useSelector(selectSigner);
+  const address = useSelector(selectAddress);
+  let web3 = new Web3(`https://mainnet.infura.io/v3/${INFURA_ID}`);
+  const war = contractInfo.ropsten.war;
+  const weth = "0xc778417e063141139fce010982780140aa0cd5ab";
+
+  let uniswap = {};
+  if (Object.keys(signer).length > 0) {
+    uniswap = new ethers.Contract(
+      contractInfo.ropsten.uniswap,
+      UNI_ABI,
+      signer
+    );
+  }
 
   const determineExchange = () => {
     if (appChain === "0x13881" || appChain === "0x89") {
@@ -16,8 +34,24 @@ function Trade() {
     }
   };
 
-  const swap = (amount) => {
-    alert(`You swapped ${amount}.`);
+  const swap = async (amount) => {
+    const convertedAmount = web3.utils.toWei(`${amount}`);
+    const reserves = await uniswap.getAmountsIn(convertedAmount, [weth, war]);
+    const wethReserve = reserves[0].toString();
+    const wethNeededPerUnit = web3.utils.fromWei(wethReserve);
+    const wethNeeded = wethNeededPerUnit * amount;
+    const wethConverted = ethers.utils.parseEther(wethNeeded.toString());
+
+    const options = { gasLimit: 200000, value: wethConverted };
+    const swap = await uniswap.swapETHForExactTokens(
+      convertedAmount,
+      [weth, war],
+      address,
+      Date.now() + 60000,
+      options
+    );
+    const tx = swap.wait();
+    alert(tx);
   };
 
   const [amount, setAmount] = useState(0);

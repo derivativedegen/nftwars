@@ -10,8 +10,8 @@ import Menu from "./pages/menu";
 import About from "./pages/about";
 import Stake from "./pages/stake";
 import Social from "./pages/social";
-import Trade from "./pages/trade";
-import AddLiquidity from "./pages/addLp";
+import Swap from "./pages/swap";
+import Liquidity from "./pages/liquidity";
 import Header from "./components/header";
 import Stats from "./pages/stats";
 import Network from "./pages/network";
@@ -319,12 +319,12 @@ function App({ switchChain, loadWeb3Modal, logoutOfWeb3Modal }) {
           <Route path="/game" component={Game} />
           <Route path="/about" component={About} />
           <Route path="/shop" component={Shop} />
-          <Route path="/addliquidity" component={AddLiquidity} />
+          <Route path="/liquidity" component={Liquidity} />
           <Route path="/stats" component={Stats} />
           <Route path="/social" component={Social} />
           <Route path="/nft/:id" component={Nft} />
-          <Route path="/trade">
-            <Trade getTokenBalances={getTokenBalances} />
+          <Route path="/swap">
+            <Swap getTokenBalances={getTokenBalances} />
           </Route>
           <Route path="/network">
             <Network switchChain={switchChain} />

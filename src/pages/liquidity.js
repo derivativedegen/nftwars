@@ -1,5 +1,5 @@
 import React from "react";
-import "./addLp.css";
+import "./liquidity.css";
 import SiteFrame from "../components/siteFrame";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";

@@ -40,7 +40,7 @@ const Menu = ({ logoutOfWeb3Modal }) => {
           ) : null}
           <li
             className="nav-item textspaced"
-            onClick={() => history.push("/trade")}
+            onClick={() => history.push("/swap")}
           >
             Swap
           </li>
@@ -52,7 +52,7 @@ const Menu = ({ logoutOfWeb3Modal }) => {
           </li>
           <li
             className="nav-item textspaced"
-            onClick={() => history.push("/addliquidity")}
+            onClick={() => history.push("/liquidity")}
           >
             Liquidity
           </li>

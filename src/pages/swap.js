@@ -21,6 +21,8 @@ function Trade({ getTokenBalances }) {
   const appChain = useSelector(selectAppChain);
   const signer = useSelector(selectSigner);
   const address = useSelector(selectAddress);
+  const [amount, setAmount] = useState(0);
+  const [hash, setHash] = useState("");
 
   let web3 = new Web3(`https://mainnet.infura.io/v3/${INFURA_ID}`);
   const war = contractInfo.ropsten.war;
@@ -58,7 +60,6 @@ function Trade({ getTokenBalances }) {
       const wethNeeded = wethNeededPerUnit * amount;
       const wethRounded = wethNeeded.toFixed(18);
       const wethConverted = ethers.utils.parseEther(wethRounded.toString());
-
       const options = { gasLimit: 200000, value: wethConverted };
       const swap = await uniswap.swapETHForExactTokens(
         convertedAmount,
@@ -67,8 +68,11 @@ function Trade({ getTokenBalances }) {
         Date.now() + 60000,
         options
       );
-      const tx = swap.wait();
-      const balances = await getTokenBalances();
+      setHash(swap.hash);
+      const tx = await swap.wait();
+      if (tx) {
+        const balances = await getTokenBalances(address);
+      }
       dispatch(toggleLoading(false));
     } catch (error) {
       dispatch(toggleLoading(false));
@@ -76,8 +80,6 @@ function Trade({ getTokenBalances }) {
       console.log(error);
     }
   };
-
-  const [amount, setAmount] = useState(0);
 
   return (
     <div className="col-xs-12 col-xl-10 offset-xl-1">
@@ -93,6 +95,16 @@ function Trade({ getTokenBalances }) {
               setAmount(Number(e.target.value));
             }}
           />
+          {hash && (
+            <h5 className="textspaced mt-5">
+              <a
+                href={`https://ropsten.etherscan.io/tx/${hash}`}
+                target="_blank"
+              >
+                View on Etherscan
+              </a>
+            </h5>
+          )}
           <button className="btn-connect mt-5" onClick={() => swap(amount)}>
             Swap ETH
           </button>

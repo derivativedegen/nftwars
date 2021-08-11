@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./trade.css";
 import SiteFrame from "../components/siteFrame";
 import { Link } from "react-router-dom";
@@ -16,9 +16,29 @@ function Trade() {
     }
   };
 
+  const swap = (amount) => {
+    alert(`You swapped ${amount}.`);
+  };
+
+  const [amount, setAmount] = useState(0);
+
   return (
     <div className="tradeframe col-xs-12 col-xl-10 offset-xl-1">
-      <SiteFrame address={determineExchange()} />
+      {/* <SiteFrame address={determineExchange()} /> */}
+      <div className="d-flex justify-content-center col-6 offset-3">
+        <input
+          type="number"
+          placeholder="5"
+          className="stakeclaiminput shadow-lg"
+          id="stakeclaiminput"
+          onChange={(e) => {
+            setAmount(Number(e.target.value));
+          }}
+        />
+        <button className="btn-connect" onClick={() => swap(amount)}>
+          Swap
+        </button>
+      </div>
 
       <div class="mt-4 d-flex justify-content-center">
         <Link to="/menu">

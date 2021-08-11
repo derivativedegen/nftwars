@@ -322,8 +322,10 @@ function App({ switchChain, loadWeb3Modal, logoutOfWeb3Modal }) {
           <Route path="/addliquidity" component={AddLiquidity} />
           <Route path="/stats" component={Stats} />
           <Route path="/social" component={Social} />
-          <Route path="/trade" component={Trade} />
           <Route path="/nft/:id" component={Nft} />
+          <Route path="/trade">
+            <Trade getTokenBalances={getTokenBalances} />
+          </Route>
           <Route path="/network">
             <Network switchChain={switchChain} />
           </Route>

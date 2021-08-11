@@ -40,15 +40,21 @@ const Menu = ({ logoutOfWeb3Modal }) => {
           ) : null}
           <li
             className="nav-item textspaced"
+            onClick={() => history.push("/trade")}
+          >
+            Swap
+          </li>
+          <li
+            className="nav-item textspaced"
             onClick={() => history.push("/stake")}
           >
             Stake
           </li>
           <li
             className="nav-item textspaced"
-            onClick={() => history.push("/about")}
+            onClick={() => history.push("/addliquidity")}
           >
-            About
+            Liquidity
           </li>
           <li
             className="nav-item textspaced"
@@ -58,15 +64,9 @@ const Menu = ({ logoutOfWeb3Modal }) => {
           </li>
           <li
             className="nav-item textspaced"
-            onClick={() => history.push("/trade")}
+            onClick={() => history.push("/about")}
           >
-            Buy WAR
-          </li>
-          <li
-            className="nav-item textspaced"
-            onClick={() => history.push("/addliquidity")}
-          >
-            Add LP
+            About
           </li>
           <li
             className="nav-item textspaced"
